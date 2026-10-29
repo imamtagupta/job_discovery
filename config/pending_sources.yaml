@@ -1,0 +1,117 @@
+pending_sources:
+- company_id: freshworks
+  company_name: Freshworks
+  provider: smartrecruiters
+  evidence_url: https://careers.smartrecruiters.com/Freshworks/gtm
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:09.214309+00:00'
+- company_id: github
+  company_name: GitHub
+  provider: icims
+  evidence_url: https://globalcareers-githubinc.icims.com/jobs/login?loginOnly=1
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:16.763328+00:00'
+- company_id: jpmorgan-chase
+  company_name: JPMorgan Chase
+  provider: oracle-recruiting
+  evidence_url: https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/requisitions?keyword=Asset+and+Wealth+Management&mode=location
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:28.774324+00:00'
+- company_id: bny
+  company_name: BNY
+  provider: oracle-recruiting
+  evidence_url: https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/BNY-Careers/jobs
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:34.499397+00:00'
+- company_id: sp-global
+  company_name: S&P Global
+  provider: icims
+  evidence_url: https://www.icims.com/legal/privacy-notice-website/\
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:34.499455+00:00'
+- company_id: msci
+  company_name: MSCI
+  provider: icims
+  evidence_url: https://rsacareers-msci.icims.com
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:36.423621+00:00'
+- company_id: schwab
+  company_name: Charles Schwab
+  provider: icims
+  evidence_url: https://career-schwab.icims.com/jobs/login?loginOnly=1&redirect=search&mobile=false&width=1230&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240
+  reason: provider detected but adapter/validator is not supported
+  verification_status: unsupported
+  checked_at: '2026-10-26T19:01:36.423684+00:00'
+- company_id: dream11
+  company_name: Dream11
+  provider: lever
+  identifiers:
+    site: dreamsports
+    region: global
+  evidence_url: https://jobs.lever.co/dreamsports\
+  validation_url: https://api.lever.co/v0/postings/dreamsports
+  verification_status: failed_validation
+  reason: 'HTTPStatusError: Client error ''404 Not Found'' for url ''https://api.lever.co/v0/postings/dreamsports?mode=json''
+
+    For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404'
+  identity_check: official_page_link
+  checked_at: '2026-10-29T06:53:55.696340+00:00'
+- company_id: mindtickle
+  company_name: Mindtickle
+  provider: lever
+  identifiers:
+    site: js
+    region: global
+  evidence_url: https://jobs.lever.co/js/bug-snag.js
+  validation_url: https://api.lever.co/v0/postings/js
+  verification_status: failed_validation
+  reason: 'HTTPStatusError: Client error ''404 Not Found'' for url ''https://api.lever.co/v0/postings/js?mode=json''
+
+    For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404'
+  identity_check: official_page_link
+  checked_at: '2026-10-29T06:53:55.696373+00:00'
+- company_id: observe-ai
+  company_name: Observe.AI
+  provider: greenhouse
+  identifiers:
+    board_token: embed
+  evidence_url: https://boards.greenhouse.io/embed/job_board/js?for=observeai
+  validation_url: https://boards-api.greenhouse.io/v1/boards/embed/jobs
+  verification_status: failed_validation
+  reason: 'HTTPStatusError: Client error ''404 Not Found'' for url ''https://boards-api.greenhouse.io/v1/boards/embed/jobs''
+
+    For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404'
+  identity_check: official_page_link
+  checked_at: '2026-10-29T06:53:55.696382+00:00'
+- company_id: checkout-com
+  company_name: Checkout.com
+  provider: ashby
+  identifiers:
+    board_name: checkout
+  evidence_url: https://jobs.ashbyhq.com/checkout.com/form/talent-communities
+  validation_url: https://api.ashbyhq.com/posting-api/job-board/checkout
+  verification_status: failed_validation
+  reason: 'HTTPStatusError: Client error ''404 Not Found'' for url ''https://api.ashbyhq.com/posting-api/job-board/checkout''
+
+    For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404'
+  identity_check: official_page_link
+  checked_at: '2026-10-29T06:53:55.696390+00:00'
+- company_id: circleci
+  company_name: CircleCI
+  provider: greenhouse
+  identifiers:
+    board_token: embed
+  evidence_url: https://boards.greenhouse.io/embed/job_board/js
+  validation_url: https://boards-api.greenhouse.io/v1/boards/embed/jobs
+  verification_status: failed_validation
+  reason: 'HTTPStatusError: Client error ''404 Not Found'' for url ''https://boards-api.greenhouse.io/v1/boards/embed/jobs''
+
+    For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404'
+  identity_check: official_page_link
+  checked_at: '2026-10-29T06:53:55.696397+00:00'

@@ -1,0 +1,12 @@
+.env
+.venv/
+*.db
+*.sqlite*
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+service-account*.json
+

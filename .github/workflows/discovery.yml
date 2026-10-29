@@ -1,0 +1,39 @@
+name: Job discovery
+
+on:
+  schedule:
+    # 08:00 and 20:00 IST (UTC+05:30)
+    - cron: "30 2,14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: job-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: service-account.json
+      SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install ".[postgres]"
+      - name: Write Google credentials
+        if: ${{ env.SERVICE_ACCOUNT_JSON != '' }}
+        run: printf '%s' "$SERVICE_ACCOUNT_JSON" > service-account.json
+      - run: job-discovery init-db
+      - run: job-discovery discover
+      - name: Sync Google Sheets
+        if: ${{ env.SERVICE_ACCOUNT_JSON != '' && env.GOOGLE_SHEETS_SPREADSHEET_ID != '' }}
+        run: job-discovery sync-sheets

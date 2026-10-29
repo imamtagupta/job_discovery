@@ -1,0 +1,388 @@
+companies:
+- id: example-company
+  name: Example Company
+  product_company: true
+  enabled: false
+  sources:
+  - type: greenhouse
+    board_token: replace-with-verified-board-token
+    enabled: false
+  - type: lever
+    site: replace-with-verified-lever-site
+    region: global
+    enabled: false
+- id: razorpay
+  name: Razorpay
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: razorpaysoftwareprivatelimited
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited
+      validation_url: https://boards-api.greenhouse.io/v1/boards/razorpaysoftwareprivatelimited/jobs
+      validated_at: '2026-10-26T18:34:42.007905+00:00'
+      job_count_at_validation: 26
+- id: paytm
+  name: Paytm
+  product_company: true
+  enabled: true
+  sources:
+  - type: lever
+    site: paytm
+    region: global
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.lever.co/paytm
+      validation_url: https://api.lever.co/v0/postings/paytm
+      validated_at: '2026-10-26T18:34:59.165277+00:00'
+      job_count_at_validation: 197
+- id: nium
+  name: Nium
+  product_company: true
+  enabled: true
+  sources:
+  - type: lever
+    site: nium
+    region: global
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.lever.co/nium
+      validation_url: https://api.lever.co/v0/postings/nium
+      validated_at: '2026-10-26T18:35:08.233872+00:00'
+      job_count_at_validation: 20
+- id: browserstack
+  name: BrowserStack
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: browserstack
+    workday_cluster: wd3
+    site_id: External
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://browserstack.wd3.myworkdayjobs.com/External
+      validation_url: https://browserstack.wd3.myworkdayjobs.com/wday/cxs/browserstack/External/jobs
+      validated_at: '2026-10-26T18:35:09.249805+00:00'
+      job_count_at_validation: 30
+- id: mindtickle
+  name: Mindtickle
+  product_company: true
+  enabled: true
+  sources:
+  - type: lever
+    site: mindtickle
+    region: global
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.lever.co/mindtickle/efead581-0fc4-4056-8320-4c1816d18732
+      validation_url: https://api.lever.co/v0/postings/mindtickle
+      validated_at: '2026-10-26T18:35:13.293440+00:00'
+      job_count_at_validation: 21
+- id: canonical
+  name: Canonical
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: canonical
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://job-boards.greenhouse.io/canonical/jobs/7490812
+      validation_url: https://boards-api.greenhouse.io/v1/boards/canonical/jobs
+      validated_at: '2026-10-26T18:35:14.376186+00:00'
+      job_count_at_validation: 314
+- id: zapier
+  name: Zapier
+  product_company: true
+  enabled: true
+  sources:
+  - type: ashby
+    board_name: zapier
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.ashbyhq.com/zapier/45b2c110-f8e0-497a-914c-72fddf447ed0\
+      validation_url: https://api.ashbyhq.com/posting-api/job-board/zapier
+      validated_at: '2026-10-26T18:35:14.432982+00:00'
+      job_count_at_validation: 12
+- id: notion
+  name: Notion
+  product_company: true
+  enabled: true
+  sources:
+  - type: ashby
+    board_name: notion
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.ashbyhq.com/notion/fb3cd30c-0557-40ec-a47d-e0118663d346
+      validation_url: https://api.ashbyhq.com/posting-api/job-board/notion
+      validated_at: '2026-10-26T18:35:14.603663+00:00'
+      job_count_at_validation: 140
+- id: figma
+  name: Figma
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: figma
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://boards.greenhouse.io/figma/jobs/6132643004?gh_jid=6132643004
+      validation_url: https://boards-api.greenhouse.io/v1/boards/figma/jobs
+      validated_at: '2026-10-26T18:35:14.879010+00:00'
+      job_count_at_validation: 138
+- id: workday
+  name: Workday
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: workday
+    workday_cluster: wd5
+    site_id: Workday
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://workday.wd5.myworkdayjobs.com/en-US/Workday/introduceYourself
+      validation_url: https://workday.wd5.myworkdayjobs.com/wday/cxs/workday/Workday/jobs
+      validated_at: '2026-10-26T18:35:20.102372+00:00'
+      job_count_at_validation: 375
+- id: target
+  name: Target
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: target
+    workday_cluster: wd5
+    site_id: targetcareers
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://target.wd5.myworkdayjobs.com/targetcareers/login?redirect=/targetcareers/userHome
+      validation_url: https://target.wd5.myworkdayjobs.com/wday/cxs/target/targetcareers/jobs
+      validated_at: '2026-10-26T18:35:22.570123+00:00'
+      job_count_at_validation: 2000
+- id: visa
+  name: Visa
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: visa
+    workday_cluster: wd5
+    site_id: Visa
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://visa.wd5.myworkdayjobs.com/Visa
+      validation_url: https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/Visa/jobs
+      validated_at: '2026-10-26T18:35:24.303075+00:00'
+      job_count_at_validation: 839
+- id: mastercard
+  name: Mastercard
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: mastercard
+    workday_cluster: wd1
+    site_id: CorporateCareers
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://mastercard.wd1.myworkdayjobs.com/CorporateCareers
+      validation_url: https://mastercard.wd1.myworkdayjobs.com/wday/cxs/mastercard/CorporateCareers/jobs
+      validated_at: '2026-10-26T18:35:26.327947+00:00'
+      job_count_at_validation: 1143
+- id: barclays
+  name: Barclays
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: barclays
+    workday_cluster: wd3
+    site_id: External_Career_Site_Barclays
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://barclays.wd3.myworkdayjobs.com/External_Career_Site_Barclays/login?redirect=/External_Career_Site_Barclays#
+      validation_url: https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs
+      validated_at: '2026-10-26T19:01:29.684377+00:00'
+      job_count_at_validation: 717
+- id: citi
+  name: Citi
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: citi
+    workday_cluster: wd5
+    site_id: '2'
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://citi.wd5.myworkdayjobs.com/en-US/2/userHome
+      validation_url: https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs
+      validated_at: '2026-10-26T19:01:34.499230+00:00'
+      job_count_at_validation: 2000
+- id: sp-global
+  name: S&P Global
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: spgi
+    workday_cluster: wd5
+    site_id: SPGI_Careers
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://spgi.wd5.myworkdayjobs.com/SPGI_Careers
+      validation_url: https://spgi.wd5.myworkdayjobs.com/wday/cxs/spgi/SPGI_Careers/jobs
+      validated_at: '2026-10-26T19:01:36.423518+00:00'
+      job_count_at_validation: 324
+- id: red-hat
+  name: Red Hat
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: redhat
+    workday_cluster: wd5
+    site_id: jobs
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://redhat.wd5.myworkdayjobs.com/jobs/login
+      validation_url: https://redhat.wd5.myworkdayjobs.com/wday/cxs/redhat/jobs/jobs
+      validated_at: '2026-10-26T19:01:37.919868+00:00'
+      job_count_at_validation: 153
+- id: new-relic
+  name: New Relic
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: newrelic
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://job-boards.greenhouse.io/newrelic/jobs/5461059008
+      validation_url: https://boards-api.greenhouse.io/v1/boards/newrelic/jobs
+      validated_at: '2026-10-26T19:01:38.282604+00:00'
+      job_count_at_validation: 48
+- id: sentry
+  name: Sentry
+  product_company: true
+  enabled: true
+  sources:
+  - type: ashby
+    board_name: sentry
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.ashbyhq.com/sentry/9889cf59-cd32-4aff-bff7-645bb1be4e14&quot;],&quot;departmentName&quot;:[0,&quot;Sales
+      validation_url: https://api.ashbyhq.com/posting-api/job-board/sentry
+      validated_at: '2026-10-26T19:01:38.401914+00:00'
+      job_count_at_validation: 42
+- id: supabase
+  name: Supabase
+  product_company: true
+  enabled: true
+  sources:
+  - type: ashby
+    board_name: supabase
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.ashbyhq.com/supabase/48950725-e0d9-4025-92d9-f75e1b60ce45/application
+      validation_url: https://api.ashbyhq.com/posting-api/job-board/supabase
+      validated_at: '2026-10-26T19:01:38.743925+00:00'
+      job_count_at_validation: 64
+- id: vercel
+  name: Vercel
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: vercel
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://job-boards.greenhouse.io/vercel/jobs/6181755004\
+      validation_url: https://boards-api.greenhouse.io/v1/boards/vercel/jobs
+      validated_at: '2026-10-26T19:01:39.058135+00:00'
+      job_count_at_validation: 93
+- id: render
+  name: Render
+  product_company: true
+  enabled: true
+  sources:
+  - type: ashby
+    board_name: render
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.ashbyhq.com/render/62ea10c7-ad69-444f-9632-dd4b50b8c805/application\
+      validation_url: https://api.ashbyhq.com/posting-api/job-board/render
+      validated_at: '2026-10-26T19:01:39.117626+00:00'
+      job_count_at_validation: 37
+- id: cohere
+  name: Cohere
+  product_company: true
+  enabled: true
+  sources:
+  - type: ashby
+    board_name: cohere
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://jobs.ashbyhq.com/cohere\
+      validation_url: https://api.ashbyhq.com/posting-api/job-board/cohere
+      validated_at: '2026-10-26T19:01:39.225860+00:00'
+      job_count_at_validation: 116
+- id: crowdstrike
+  name: CrowdStrike
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: crowdstrike
+    workday_cluster: wd5
+    site_id: crowdstrikecareers
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers/page/56040874354a1000d20c322b45450000
+      validation_url: https://crowdstrike.wd5.myworkdayjobs.com/wday/cxs/crowdstrike/crowdstrikecareers/jobs
+      validated_at: '2026-10-26T19:01:40.859701+00:00'
+      job_count_at_validation: 386
+- id: palo-alto-networks
+  name: Palo Alto Networks
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: paloaltonetworks
+    workday_cluster: wd5
+    site_id: panwexternalcareers
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://paloaltonetworks.wd5.myworkdayjobs.com/en-US/panwexternalcareers/introduceYourself?clientRequestID=06f06ca6dae2441d99391ed600fc2265
+      validation_url: https://paloaltonetworks.wd5.myworkdayjobs.com/wday/cxs/paloaltonetworks/panwexternalcareers/jobs
+      validated_at: '2026-10-26T19:01:41.981168+00:00'
+      job_count_at_validation: 1400

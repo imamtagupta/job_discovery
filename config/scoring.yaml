@@ -1,0 +1,16 @@
+weights:
+  primary_alignment: 30
+  architecture_skills: 20
+  experience_seniority: 15
+  domain_achievements: 15
+  location_eligibility: 10
+  compensation_evidence: 5
+  freshness: 5
+high_score_threshold: 80
+review_score_threshold: 65
+hard_filters:
+  excluded_title_terms: [intern, internship, graduate, fresher, junior, qa engineer, sdet, test engineer, automation tester, tester, data analyst, business intelligence, data scientist, research scientist, mobile engineer, frontend engineer, front-end engineer, helpdesk, technical support, professional services consultant, customer solution architect, product manager]
+  overleveled_title_terms: [staff, principal, distinguished engineer, engineering manager, director of engineering]
+  excluded_employment_types: [internship, contract-to-hire]
+mandatory_markers: [required, requirements, must have, minimum qualifications, what you need]
+preferred_markers: [preferred, nice to have, bonus, desirable]

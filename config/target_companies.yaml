@@ -1,0 +1,152 @@
+# Discovery candidates only. Presence here is not evidence of an ATS or an open role.
+companies:
+  - {id: razorpay, name: Razorpay, website: "https://razorpay.com", careers_url: "https://razorpay.com/jobs", categories: [fintech, india]}
+  - {id: phonepe, name: PhonePe, website: "https://www.phonepe.com", careers_url: "https://www.phonepe.com/careers", categories: [fintech, india]}
+  - {id: paytm, name: Paytm, website: "https://paytm.com", careers_url: "https://paytm.com/careers", categories: [fintech, india]}
+  - {id: cred, name: CRED, website: "https://cred.club", careers_url: "https://careers.cred.club", categories: [fintech, india]}
+  - {id: slice, name: Slice, website: "https://sliceit.com", careers_url: "https://sliceit.com/careers", categories: [fintech, india]}
+  - {id: groww, name: Groww, website: "https://groww.in", careers_url: "https://groww.in/careers", categories: [fintech, india]}
+  - {id: zerodha, name: Zerodha, website: "https://zerodha.com", careers_url: "https://zerodha.com/careers", categories: [fintech, india]}
+  - {id: cashfree-payments, name: Cashfree Payments, website: "https://www.cashfree.com", careers_url: "https://www.cashfree.com/careers", categories: [fintech, india]}
+  - {id: pine-labs, name: Pine Labs, website: "https://www.pinelabs.com", careers_url: "https://www.pinelabs.com/careers", categories: [fintech, india]}
+  - {id: bharatpe, name: BharatPe, website: "https://bharatpe.com", careers_url: "https://bharatpe.com/career", categories: [fintech, india]}
+  - {id: nium, name: Nium, website: "https://www.nium.com", careers_url: "https://www.nium.com/careers", categories: [fintech]}
+  - {id: juspay, name: Juspay, website: "https://juspay.in", careers_url: "https://juspay.in/careers", categories: [fintech, india]}
+  - {id: chargebee, name: Chargebee, website: "https://www.chargebee.com", careers_url: "https://www.chargebee.com/careers", categories: [saas, india]}
+  - {id: freshworks, name: Freshworks, website: "https://www.freshworks.com", careers_url: "https://www.freshworks.com/company/careers", categories: [saas, india]}
+  - {id: zoho, name: Zoho, website: "https://www.zoho.com", careers_url: "https://www.zoho.com/careers", categories: [saas, india]}
+  - {id: postman, name: Postman, website: "https://www.postman.com", careers_url: "https://www.postman.com/company/careers", categories: [developer-tools, india]}
+  - {id: browserstack, name: BrowserStack, website: "https://www.browserstack.com", careers_url: "https://www.browserstack.com/careers", categories: [saas, india]}
+  - {id: hasura, name: Hasura, website: "https://hasura.io", careers_url: "https://hasura.io/careers", categories: [developer-tools, india]}
+  - {id: meesho, name: Meesho, website: "https://www.meesho.io", careers_url: "https://www.meesho.io/jobs", categories: [product, india]}
+  - {id: flipkart, name: Flipkart, website: "https://www.flipkartcareers.com", careers_url: "https://www.flipkartcareers.com/#!/joblist", categories: [product, india]}
+  - {id: swiggy, name: Swiggy, website: "https://www.swiggy.com", careers_url: "https://careers.swiggy.com", categories: [product, india]}
+  - {id: zomato, name: Zomato, website: "https://www.zomato.com", careers_url: "https://www.zomato.com/careers", categories: [product, india]}
+  - {id: dream11, name: Dream11, website: "https://www.dream11.com", careers_url: "https://www.dreamsports.group/careers", categories: [product, india]}
+  - {id: ola, name: Ola, website: "https://www.olacabs.com", careers_url: "https://www.olacabs.com/careers", categories: [product, india]}
+  - {id: practo, name: Practo, website: "https://www.practo.com", careers_url: "https://www.practo.com/company/careers", categories: [healthtech, india]}
+  - {id: innovaccer, name: Innovaccer, website: "https://innovaccer.com", careers_url: "https://innovaccer.com/careers", categories: [healthtech, saas]}
+  - {id: clevertap, name: CleverTap, website: "https://clevertap.com", careers_url: "https://clevertap.com/careers", categories: [saas, india]}
+  - {id: webengage, name: WebEngage, website: "https://webengage.com", careers_url: "https://webengage.com/careers", categories: [saas, india]}
+  - {id: yellow-ai, name: Yellow.ai, website: "https://yellow.ai", careers_url: "https://yellow.ai/careers", categories: [saas, ai]}
+  - {id: whatfix, name: Whatfix, website: "https://whatfix.com", careers_url: "https://whatfix.com/careers", categories: [saas, india]}
+  - {id: leadsquared, name: LeadSquared, website: "https://www.leadsquared.com", careers_url: "https://www.leadsquared.com/careers", categories: [saas, india]}
+  - {id: darwinbox, name: Darwinbox, website: "https://darwinbox.com", careers_url: "https://darwinbox.com/careers", categories: [saas, india]}
+  - {id: highradius, name: HighRadius, website: "https://www.highradius.com", careers_url: "https://www.highradius.com/careers", categories: [fintech, saas]}
+  - {id: mindtickle, name: Mindtickle, website: "https://www.mindtickle.com", careers_url: "https://www.mindtickle.com/careers", categories: [saas, india]}
+  - {id: gokwik, name: GoKwik, website: "https://www.gokwik.co", careers_url: "https://www.gokwik.co/careers", categories: [fintech, saas]}
+  - {id: tekion, name: Tekion, website: "https://tekion.com", careers_url: "https://tekion.com/careers", categories: [saas, india]}
+  - {id: thoughtspot, name: ThoughtSpot, website: "https://www.thoughtspot.com", careers_url: "https://www.thoughtspot.com/careers", categories: [saas, data]}
+  - {id: observe-ai, name: Observe.AI, website: "https://www.observe.ai", careers_url: "https://www.observe.ai/careers", categories: [saas, ai]}
+  - {id: salesforce, name: Salesforce, website: "https://www.salesforce.com", careers_url: "https://careers.salesforce.com", categories: [saas, international]}
+  - {id: microsoft, name: Microsoft, website: "https://www.microsoft.com", careers_url: "https://careers.microsoft.com", categories: [cloud, international]}
+  - {id: amazon, name: Amazon, website: "https://www.amazon.com", careers_url: "https://www.amazon.jobs", categories: [cloud, product]}
+  - {id: google, name: Google, website: "https://www.google.com", careers_url: "https://www.google.com/about/careers/applications/jobs/results", categories: [cloud, product]}
+  - {id: apple, name: Apple, website: "https://www.apple.com", careers_url: "https://jobs.apple.com", categories: [product, international]}
+  - {id: meta, name: Meta, website: "https://www.meta.com", careers_url: "https://www.metacareers.com/jobs", categories: [product, international]}
+  - {id: netflix, name: Netflix, website: "https://www.netflix.com", careers_url: "https://jobs.netflix.com", categories: [product, international]}
+  - {id: uber, name: Uber, website: "https://www.uber.com", careers_url: "https://www.uber.com/careers", categories: [product, international]}
+  - {id: airbnb, name: Airbnb, website: "https://www.airbnb.com", careers_url: "https://careers.airbnb.com", categories: [product, international]}
+  - {id: stripe, name: Stripe, website: "https://stripe.com", careers_url: "https://stripe.com/jobs", categories: [fintech, international]}
+  - {id: block, name: Block, website: "https://block.xyz", careers_url: "https://block.xyz/careers", categories: [fintech, international]}
+  - {id: paypal, name: PayPal, website: "https://www.paypal.com", careers_url: "https://careers.pypl.com", categories: [fintech, international]}
+  - {id: wise, name: Wise, website: "https://wise.com", careers_url: "https://wise.jobs", categories: [fintech, international]}
+  - {id: revolut, name: Revolut, website: "https://www.revolut.com", careers_url: "https://www.revolut.com/careers", categories: [fintech, international]}
+  - {id: adyen, name: Adyen, website: "https://www.adyen.com", careers_url: "https://careers.adyen.com", categories: [fintech, international]}
+  - {id: plaid, name: Plaid, website: "https://plaid.com", careers_url: "https://plaid.com/careers", categories: [fintech, international]}
+  - {id: coinbase, name: Coinbase, website: "https://www.coinbase.com", careers_url: "https://www.coinbase.com/careers", categories: [fintech, international]}
+  - {id: robinhood, name: Robinhood, website: "https://robinhood.com", careers_url: "https://careers.robinhood.com", categories: [fintech, international]}
+  - {id: affirm, name: Affirm, website: "https://www.affirm.com", careers_url: "https://www.affirm.com/careers", categories: [fintech, international]}
+  - {id: klarna, name: Klarna, website: "https://www.klarna.com", careers_url: "https://www.klarna.com/careers", categories: [fintech, international]}
+  - {id: checkout-com, name: Checkout.com, website: "https://www.checkout.com", careers_url: "https://www.checkout.com/careers", categories: [fintech, international]}
+  - {id: cloudflare, name: Cloudflare, website: "https://www.cloudflare.com", careers_url: "https://www.cloudflare.com/careers", categories: [cloud, international]}
+  - {id: datadog, name: Datadog, website: "https://www.datadoghq.com", careers_url: "https://careers.datadoghq.com", categories: [cloud, saas]}
+  - {id: snowflake, name: Snowflake, website: "https://www.snowflake.com", careers_url: "https://careers.snowflake.com", categories: [cloud, data]}
+  - {id: databricks, name: Databricks, website: "https://www.databricks.com", careers_url: "https://www.databricks.com/company/careers", categories: [cloud, data]}
+  - {id: mongodb, name: MongoDB, website: "https://www.mongodb.com", careers_url: "https://www.mongodb.com/company/careers", categories: [database, cloud]}
+  - {id: confluent, name: Confluent, website: "https://www.confluent.io", careers_url: "https://www.confluent.io/careers", categories: [cloud, data]}
+  - {id: elastic, name: Elastic, website: "https://www.elastic.co", careers_url: "https://www.elastic.co/careers", categories: [cloud, data]}
+  - {id: hashicorp, name: HashiCorp, website: "https://www.hashicorp.com", careers_url: "https://www.hashicorp.com/careers", categories: [cloud, devops]}
+  - {id: gitlab, name: GitLab, website: "https://about.gitlab.com", careers_url: "https://about.gitlab.com/jobs", categories: [devops, remote]}
+  - {id: github, name: GitHub, website: "https://github.com", careers_url: "https://www.github.careers/careers-home", categories: [developer-tools, remote]}
+  - {id: docker, name: Docker, website: "https://www.docker.com", careers_url: "https://www.docker.com/career-openings", categories: [devops, remote]}
+  - {id: grafana-labs, name: Grafana Labs, website: "https://grafana.com", careers_url: "https://grafana.com/about/careers", categories: [cloud, remote]}
+  - {id: canonical, name: Canonical, website: "https://canonical.com", careers_url: "https://canonical.com/careers", categories: [cloud, remote]}
+  - {id: digitalocean, name: DigitalOcean, website: "https://www.digitalocean.com", careers_url: "https://www.digitalocean.com/careers", categories: [cloud, remote]}
+  - {id: twilio, name: Twilio, website: "https://www.twilio.com", careers_url: "https://www.twilio.com/company/jobs", categories: [cloud, saas]}
+  - {id: okta, name: Okta, website: "https://www.okta.com", careers_url: "https://www.okta.com/company/careers", categories: [cloud, security]}
+  - {id: atlassian, name: Atlassian, website: "https://www.atlassian.com", careers_url: "https://www.atlassian.com/company/careers", categories: [saas, international]}
+  - {id: hubspot, name: HubSpot, website: "https://www.hubspot.com", careers_url: "https://www.hubspot.com/careers", categories: [saas, international]}
+  - {id: shopify, name: Shopify, website: "https://www.shopify.com", careers_url: "https://www.shopify.com/careers", categories: [saas, remote]}
+  - {id: zapier, name: Zapier, website: "https://zapier.com", careers_url: "https://zapier.com/jobs", categories: [saas, remote]}
+  - {id: automattic, name: Automattic, website: "https://automattic.com", careers_url: "https://automattic.com/work-with-us", categories: [product, remote]}
+  - {id: notion, name: Notion, website: "https://www.notion.so", careers_url: "https://www.notion.so/careers", categories: [saas, international]}
+  - {id: figma, name: Figma, website: "https://www.figma.com", careers_url: "https://www.figma.com/careers", categories: [saas, international]}
+  - {id: canva, name: Canva, website: "https://www.canva.com", careers_url: "https://www.canva.com/careers", categories: [saas, international]}
+  - {id: dropbox, name: Dropbox, website: "https://www.dropbox.com", careers_url: "https://jobs.dropbox.com", categories: [saas, remote]}
+  - {id: box, name: Box, website: "https://www.box.com", careers_url: "https://careers.box.com", categories: [saas, international]}
+  - {id: zoom, name: Zoom, website: "https://www.zoom.com", careers_url: "https://careers.zoom.us", categories: [saas, international]}
+  - {id: servicenow, name: ServiceNow, website: "https://www.servicenow.com", careers_url: "https://careers.servicenow.com", categories: [saas, international]}
+  - {id: workday, name: Workday, website: "https://www.workday.com", careers_url: "https://www.workday.com/en-us/company/careers.html", categories: [saas, international]}
+  - {id: sap, name: SAP, website: "https://www.sap.com", careers_url: "https://jobs.sap.com", categories: [saas, international]}
+  - {id: oracle, name: Oracle, website: "https://www.oracle.com", careers_url: "https://www.oracle.com/careers", categories: [cloud, international]}
+  - {id: ibm, name: IBM, website: "https://www.ibm.com", careers_url: "https://www.ibm.com/careers", categories: [cloud, international]}
+  - {id: intuit, name: Intuit, website: "https://www.intuit.com", careers_url: "https://www.intuit.com/careers", categories: [fintech, international]}
+  - {id: walmart-global-tech, name: Walmart Global Tech, website: "https://tech.walmart.com", careers_url: "https://careers.walmart.com/technology", categories: [product, india]}
+  - {id: target, name: Target, website: "https://www.target.com", careers_url: "https://corporate.target.com/careers", categories: [product, india]}
+  - {id: visa, name: Visa, website: "https://www.visa.com", careers_url: "https://corporate.visa.com/en/careers.html", categories: [fintech, international]}
+  - {id: mastercard, name: Mastercard, website: "https://www.mastercard.com", careers_url: "https://careers.mastercard.com", categories: [fintech, international]}
+  - {id: jpmorgan-chase, name: JPMorgan Chase, website: "https://www.jpmorganchase.com", careers_url: "https://careers.jpmorgan.com", categories: [fintech, india]}
+  - {id: goldman-sachs, name: Goldman Sachs, website: "https://www.goldmansachs.com", careers_url: "https://www.goldmansachs.com/careers", categories: [fintech, india]}
+  - {id: morgan-stanley, name: Morgan Stanley, website: "https://www.morganstanley.com", careers_url: "https://www.morganstanley.com/careers", categories: [fintech, india]}
+  - {id: hsbc, name: HSBC, website: "https://www.hsbc.com", careers_url: "https://www.hsbc.com/careers", categories: [fintech, india]}
+  - {id: bloomberg, name: Bloomberg, website: "https://www.bloomberg.com", careers_url: "https://www.bloomberg.com/company/careers", categories: [fintech, data]}
+  - {id: blackrock, name: BlackRock, website: "https://www.blackrock.com", careers_url: "https://careers.blackrock.com", categories: [fintech, capital-markets]}
+  - {id: barclays, name: Barclays, website: "https://home.barclays", careers_url: "https://search.jobs.barclays", categories: [fintech, india]}
+  - {id: deutsche-bank, name: Deutsche Bank, website: "https://www.db.com", careers_url: "https://careers.db.com", categories: [fintech, india]}
+  - {id: citi, name: Citi, website: "https://www.citigroup.com", careers_url: "https://jobs.citi.com", categories: [fintech, india]}
+  - {id: bny, name: BNY, website: "https://www.bny.com", careers_url: "https://www.bny.com/corporate/global/en/careers.html", categories: [fintech, india]}
+  - {id: nasdaq, name: Nasdaq, website: "https://www.nasdaq.com", careers_url: "https://www.nasdaq.com/about/careers", categories: [fintech, capital-markets]}
+  - {id: sp-global, name: S&P Global, website: "https://www.spglobal.com", careers_url: "https://careers.spglobal.com", categories: [fintech, data]}
+  - {id: msci, name: MSCI, website: "https://www.msci.com", careers_url: "https://careers.msci.com", categories: [fintech, data]}
+  - {id: factset, name: FactSet, website: "https://www.factset.com", careers_url: "https://www.factset.com/careers", categories: [fintech, data]}
+  - {id: morningstar, name: Morningstar, website: "https://www.morningstar.com", careers_url: "https://careers.morningstar.com", categories: [fintech, data]}
+  - {id: upstox, name: Upstox, website: "https://upstox.com", careers_url: "https://upstox.com/careers", categories: [fintech, india]}
+  - {id: fidelity-investments, name: Fidelity Investments, website: "https://www.fidelity.com", careers_url: "https://jobs.fidelity.com", categories: [fintech, india]}
+  - {id: schwab, name: Charles Schwab, website: "https://www.schwab.com", careers_url: "https://www.schwabjobs.com", categories: [fintech]}
+  - {id: interactive-brokers, name: Interactive Brokers, website: "https://www.interactivebrokers.com", careers_url: "https://www.interactivebrokers.com/en/general/about/careers.php", categories: [fintech, trading]}
+  - {id: two-sigma, name: Two Sigma, website: "https://www.twosigma.com", careers_url: "https://www.twosigma.com/careers", categories: [quant, trading]}
+  - {id: jane-street, name: Jane Street, website: "https://www.janestreet.com", careers_url: "https://www.janestreet.com/join-jane-street/open-roles", categories: [quant, trading]}
+  - {id: tower-research, name: Tower Research Capital, website: "https://www.tower-research.com", careers_url: "https://www.tower-research.com/open-positions", categories: [quant, trading, india]}
+  - {id: imc-trading, name: IMC Trading, website: "https://www.imc.com", careers_url: "https://www.imc.com/us/careers", categories: [quant, trading]}
+  - {id: optiver, name: Optiver, website: "https://optiver.com", careers_url: "https://optiver.com/working-at-optiver/career-opportunities", categories: [quant, trading]}
+  - {id: adobe, name: Adobe, website: "https://www.adobe.com", careers_url: "https://careers.adobe.com", categories: [product, india]}
+  - {id: nvidia, name: NVIDIA, website: "https://www.nvidia.com", careers_url: "https://www.nvidia.com/en-us/about-nvidia/careers", categories: [cloud, ai, india]}
+  - {id: red-hat, name: Red Hat, website: "https://www.redhat.com", careers_url: "https://www.redhat.com/en/jobs", categories: [cloud, open-source]}
+  - {id: vmware-broadcom, name: VMware by Broadcom, website: "https://www.vmware.com", careers_url: "https://careers.broadcom.com", categories: [cloud, infrastructure]}
+  - {id: nutanix, name: Nutanix, website: "https://www.nutanix.com", careers_url: "https://www.nutanix.com/company/careers", categories: [cloud, india]}
+  - {id: akamai, name: Akamai, website: "https://www.akamai.com", careers_url: "https://www.akamai.com/careers", categories: [cloud, infrastructure]}
+  - {id: fastly, name: Fastly, website: "https://www.fastly.com", careers_url: "https://www.fastly.com/about/careers", categories: [cloud, infrastructure]}
+  - {id: new-relic, name: New Relic, website: "https://newrelic.com", careers_url: "https://newrelic.com/about/careers", categories: [cloud, observability]}
+  - {id: splunk, name: Splunk, website: "https://www.splunk.com", careers_url: "https://www.splunk.com/en_us/careers.html", categories: [cloud, observability]}
+  - {id: sentry, name: Sentry, website: "https://sentry.io", careers_url: "https://sentry.io/careers", categories: [developer-tools, remote]}
+  - {id: circleci, name: CircleCI, website: "https://circleci.com", careers_url: "https://circleci.com/careers", categories: [developer-tools, remote]}
+  - {id: pulumi, name: Pulumi, website: "https://www.pulumi.com", careers_url: "https://www.pulumi.com/careers", categories: [cloud, developer-tools]}
+  - {id: temporal, name: Temporal, website: "https://temporal.io", careers_url: "https://temporal.io/careers", categories: [distributed-systems, remote]}
+  - {id: cockroach-labs, name: Cockroach Labs, website: "https://www.cockroachlabs.com", careers_url: "https://www.cockroachlabs.com/careers", categories: [database, distributed-systems]}
+  - {id: redis, name: Redis, website: "https://redis.io", careers_url: "https://redis.io/careers", categories: [database, cloud]}
+  - {id: supabase, name: Supabase, website: "https://supabase.com", careers_url: "https://supabase.com/careers", categories: [developer-tools, remote]}
+  - {id: vercel, name: Vercel, website: "https://vercel.com", careers_url: "https://vercel.com/careers", categories: [cloud, developer-tools]}
+  - {id: render, name: Render, website: "https://render.com", careers_url: "https://render.com/careers", categories: [cloud, remote]}
+  - {id: fly-io, name: Fly.io, website: "https://fly.io", careers_url: "https://fly.io/jobs", categories: [cloud, remote]}
+  - {id: openai, name: OpenAI, website: "https://openai.com", careers_url: "https://openai.com/careers", categories: [ai, platform]}
+  - {id: anthropic, name: Anthropic, website: "https://www.anthropic.com", careers_url: "https://www.anthropic.com/careers", categories: [ai, platform]}
+  - {id: hugging-face, name: Hugging Face, website: "https://huggingface.co", careers_url: "https://huggingface.co/jobs", categories: [ai, remote]}
+  - {id: scale-ai, name: Scale AI, website: "https://scale.com", careers_url: "https://scale.com/careers", categories: [ai, platform]}
+  - {id: cohere, name: Cohere, website: "https://cohere.com", careers_url: "https://cohere.com/careers", categories: [ai, platform]}
+  - {id: rippling, name: Rippling, website: "https://www.rippling.com", careers_url: "https://www.rippling.com/careers", categories: [saas, india]}
+  - {id: rubrik, name: Rubrik, website: "https://www.rubrik.com", careers_url: "https://www.rubrik.com/company/careers", categories: [cloud, india]}
+  - {id: cohesive, name: Cohesity, website: "https://www.cohesity.com", careers_url: "https://www.cohesity.com/company/careers", categories: [cloud, india]}
+  - {id: netskope, name: Netskope, website: "https://www.netskope.com", careers_url: "https://www.netskope.com/company/careers", categories: [cloud, security, india]}
+  - {id: crowdstrike, name: CrowdStrike, website: "https://www.crowdstrike.com", careers_url: "https://www.crowdstrike.com/en-us/careers", categories: [cloud, security]}
+  - {id: palo-alto-networks, name: Palo Alto Networks, website: "https://www.paloaltonetworks.com", careers_url: "https://jobs.paloaltonetworks.com", categories: [cloud, security, india]}

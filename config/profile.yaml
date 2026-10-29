@@ -1,0 +1,66 @@
+candidate:
+  name: Mamta Gupta
+  location: Mumbai, India
+  years_experience: 6
+  current_employer: JPMorgan Chase & Co.
+  current_title: Associate Software Engineer
+  resume_verified: true
+skill_tiers:
+  tier_1:
+    python: [python]
+    backend_api: [backend, api, apis, rest api, restful api, fastapi, django, flask]
+    architecture: [microservices, distributed systems, system design, performance optimization]
+    postgresql: [postgresql, postgres]
+    aws: [aws, amazon web services, cloudwatch]
+    containers: [docker, kubernetes, eks, amazon eks]
+    infrastructure_as_code: [terraform, infrastructure as code, iac]
+    delivery: [ci/cd, continuous integration, continuous delivery]
+  tier_2:
+    javascript: [javascript, node.js, nodejs, express, express.js]
+    react: [react, react.js, redux]
+    databases: [mongodb, mysql]
+    event_driven: [event-driven, event driven, webhooks, messaging]
+    jenkins: [jenkins]
+    data_tooling: [pandas, numpy]
+  tier_3:
+    ai_agents: [ai agent, ai agents, agentic, llm, large language model]
+    cloud_diagnostics: [cloud diagnostics, automated diagnostics, troubleshooting automation]
+    quant_fintech: [quant, quantitative, trading, backtesting, capital markets, financial technology, fintech]
+    platform_reliability: [platform reliability, deployment automation, developer productivity]
+unsupported_primary_languages:
+  java: [java, spring, spring boot]
+  dotnet: [c#, csharp, .net, dotnet, asp.net]
+  go: [golang, go language]
+  scala: [scala]
+role_families:
+  Python Backend: [python backend, backend engineer, backend software, fastapi, django, flask]
+  Backend / Distributed Systems: [distributed systems, microservices, backend platform]
+  Platform Engineering: [platform engineer, developer productivity, internal developer platform]
+  Cloud Infrastructure Software Engineering: [cloud platform, infrastructure software, kubernetes, terraform]
+  AI Application Engineering: [ai application, ai agent, llm application, agent orchestration]
+  Quant / Financial Technology: [quant, trading platform, capital markets, risk platform, fintech]
+  Full Stack: [full stack, full-stack]
+job_priorities:
+  p0: [senior python backend engineer, senior backend software engineer, senior software engineer python, senior software engineer backend, software engineer ii python, software engineer iii python, backend platform engineer, python microservices engineer, senior software engineer distributed systems]
+  p1: [platform software engineer, infrastructure software engineer, cloud platform engineer, developer productivity engineer, ai application engineer, llm application engineer, ai agent engineer, backend engineer financial technology, quant technology software engineer, trading platform engineer]
+  p2: [full stack engineer, senior full stack software engineer, node.js backend engineer]
+achievements:
+  - {theme: performance, evidence: "Python monolith to microservices; backtesting runtime reduced about 92%", aliases: [backtesting, performance optimization, microservices migration]}
+  - {theme: ai_diagnostics, evidence: "AI-powered CloudWatch diagnostic agent; manual support queries reduced 10%", aliases: [ai agent, cloudwatch, diagnostics, troubleshooting]}
+  - {theme: infrastructure_as_code, evidence: "Led Terraform IaC across three environments", aliases: [terraform, infrastructure as code, iac]}
+  - {theme: deployment, evidence: "CI/CD with automated fallback; weekly-to-daily releases", aliases: [deployment pipeline, ci/cd, release automation]}
+  - {theme: cloud_reliability, evidence: "EKS upgrades and cloud infrastructure reliability", aliases: [eks, kubernetes, cloud reliability]}
+  - {theme: integrations, evidence: "Event-driven services, webhooks, and presigned URL file transfers", aliases: [event-driven, webhooks, presigned url]}
+  - {theme: database, evidence: "Optimized PostgreSQL schemas, indexes, and queries", aliases: [postgresql, query tuning, indexing]}
+  - {theme: data_pipeline, evidence: "Python real-time data pipelines with Pandas and NumPy", aliases: [real-time data pipeline, pandas, numpy]}
+  - {theme: leadership, evidence: "Technical leadership, mentoring, and cross-functional delivery", aliases: [mentoring, technical leadership, cross-functional]}
+location_priority:
+  - {label: Mumbai, aliases: [mumbai, navi mumbai, thane], score: 100}
+  - {label: Remote India, aliases: [remote india, india remote, anywhere in india], score: 95}
+  - {label: Pune, aliases: [pune], score: 85}
+  - {label: Hyderabad, aliases: [hyderabad], score: 80}
+  - {label: Bengaluru, aliases: [bengaluru, bangalore], score: 75}
+compensation:
+  india_min_lpa: 35
+  international_min_inr_lpa: 60
+
