@@ -1,0 +1,18 @@
+job_stable_id: null
+company: Example Company
+country: India
+source_url: https://example.com/application
+questions:
+  - id: current_location
+    label: "Where are you currently located?"
+    required: true
+  - id: experience
+    label: "How many years of work experience do you have?"
+    required: true
+    field_type: number
+  - id: sponsorship
+    label: "Will you now or in the future require employment visa sponsorship?"
+    required: true
+    field_type: select
+    options: ["Yes", "No"]
+

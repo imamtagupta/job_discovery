@@ -1,0 +1,60 @@
+version: 1
+entries:
+  - key: profile.current_location
+    question: "What is your current location?"
+    aliases: ["Where are you currently located?", Current city]
+    answer: null
+    answer_mode: review_once
+    risk_level: low
+    autonomous_use: false
+    evidence: Candidate confirmation required
+
+  - key: profile.years_experience
+    question: "How many years of professional experience do you have?"
+    aliases:
+      - Total years of experience
+      - Years of work experience
+      - "How many years of work experience do you have?"
+    answer: null
+    answer_mode: review_once
+    risk_level: low
+    autonomous_use: false
+    evidence: Candidate confirmation required
+
+  - key: employment.current_employer
+    question: "Who is your current employer?"
+    aliases: [Current company, Present employer]
+    answer: null
+    answer_mode: review_once
+    risk_level: low
+    autonomous_use: false
+    evidence: Candidate confirmation required
+
+  - key: authorization.india
+    question: "Are you legally authorized to work in India?"
+    aliases: [India work authorization, "Do you have the right to work in India?"]
+    answer: null
+    answer_mode: always_review
+    risk_level: high
+    autonomous_use: false
+    evidence: Candidate confirmation required
+    countries: [India]
+
+  - key: authorization.sponsorship
+    question: "Will you now or in the future require employment visa sponsorship?"
+    aliases: ["Do you require sponsorship?", Visa sponsorship required]
+    answer: null
+    answer_mode: always_review
+    risk_level: high
+    autonomous_use: false
+    evidence: Candidate confirmation required for each applicable country
+
+  - key: compensation.expected
+    question: "What are your salary expectations?"
+    aliases: [Expected compensation, Expected salary, Desired compensation]
+    answer: null
+    answer_mode: always_review
+    risk_level: high
+    autonomous_use: false
+    evidence: Candidate and role-specific confirmation required
+

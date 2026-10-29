@@ -141,3 +141,35 @@ class Application(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow
     )
+
+
+class ApplicationAttempt(Base):
+    __tablename__ = "application_attempts"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    job_id: Mapped[int | None] = mapped_column(ForeignKey("jobs.id"), index=True)
+    source_url: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(50), default="draft", index=True)
+    auto_filled_count: Mapped[int] = mapped_column(Integer, default=0)
+    review_count: Mapped[int] = mapped_column(Integer, default=0)
+    unanswered_count: Mapped[int] = mapped_column(Integer, default=0)
+    preview: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow
+    )
+
+
+class ApplicationQuestionAudit(Base):
+    __tablename__ = "application_question_audits"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    attempt_id: Mapped[int] = mapped_column(ForeignKey("application_attempts.id"), index=True)
+    question_id: Mapped[str] = mapped_column(String(255))
+    question: Mapped[str] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(50), index=True)
+    answer: Mapped[dict | None] = mapped_column(JSON)
+    knowledge_key: Mapped[str | None] = mapped_column(String(255), index=True)
+    confidence: Mapped[float] = mapped_column(Float, default=0)
+    reason: Mapped[str] = mapped_column(Text)
+    evidence: Mapped[str | None] = mapped_column(Text)
+    answer_fingerprint: Mapped[str | None] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

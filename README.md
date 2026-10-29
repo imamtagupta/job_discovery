@@ -46,9 +46,25 @@ python -m src.main list-sources
 python -m src.main report --output discovery_report.md
 python -m src.main export-jobs --output fetched-jobs.csv
 python -m src.main export-jobs --output fetched-jobs.csv --since-hours 24
+python -m src.main init-application-kb
+python -m src.main validate-application-kb
+python -m src.main prepare-application --questions config/application_form.example.yaml --output application_preview.json
 pytest
 ruff check .
 ```
+
+## Application answer knowledge base
+
+`init-application-kb` creates the private, gitignored `config/application_answers.yaml` from the
+safe example. Review every entry before adding an answer. `auto_fill` entries must be low or medium
+risk and explicitly set `autonomous_use: true`; `review_once` and `always_review` entries are never
+silently accepted. Country and employer scopes, review dates, expiry dates, evidence, match
+confidence, and answer fingerprints are retained in the preview and database audit trail.
+
+`prepare-application` consumes extracted form questions and creates a JSON preview. Unknown,
+expired, ambiguous, legally significant, or insufficiently similar questions remain in
+`needs_review` or `unanswered`. This command prepares answers only: it does not bypass login,
+CAPTCHA, access restrictions, or submit an application.
 
 `discover-sources` fetches the official career-page candidates in
 `config/target_companies.yaml`, extracts supported ATS URLs, and validates each identifier

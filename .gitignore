@@ -9,4 +9,6 @@ __pycache__/
 dist/
 build/
 service-account*.json
+config/application_answers.yaml
+application_preview*.json
 
