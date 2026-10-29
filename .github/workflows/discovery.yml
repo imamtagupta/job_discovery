@@ -2,8 +2,8 @@ name: Job discovery
 
 on:
   schedule:
-    # 08:00 and 20:00 IST (UTC+05:30)
-    - cron: "30 2,14 * * *"
+    # Once daily at approximately 08:00 IST (02:30 UTC).
+    - cron: "30 2 * * *"
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,8 @@ concurrency:
 
 jobs:
   discover:
-    runs-on: ubuntu-latest
+    # Pin the image so runner migrations do not change this workflow underneath us.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -23,17 +24,48 @@ jobs:
       GOOGLE_SERVICE_ACCOUNT_JSON: service-account.json
       SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install ".[postgres]"
+      - name: Install dependencies
+        run: python -m pip install ".[postgres]"
+      - name: Validate required secrets
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::DATABASE_URL is missing. Add a persistent PostgreSQL URL in repository Actions secrets."
+            exit 1
+          fi
       - name: Write Google credentials
         if: ${{ env.SERVICE_ACCOUNT_JSON != '' }}
         run: printf '%s' "$SERVICE_ACCOUNT_JSON" > service-account.json
-      - run: job-discovery init-db
-      - run: job-discovery discover
+      - name: Validate configuration
+        run: job-discovery validate-config
+      - name: Initialize database
+        run: job-discovery init-db
+      - name: Discover and rank jobs
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: job-discovery discover
+      - name: Generate fetched-job files
+        if: ${{ always() }}
+        continue-on-error: true
+        run: |
+          job-discovery export-jobs --output fetched-jobs.csv --since-hours 24
+          job-discovery report --output discovery-report.md --since-hours 24
       - name: Sync Google Sheets
         if: ${{ env.SERVICE_ACCOUNT_JSON != '' && env.GOOGLE_SHEETS_SPREADSHEET_ID != '' }}
         run: job-discovery sync-sheets
+      - name: Upload fetched jobs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: fetched-jobs-${{ github.run_number }}
+          path: |
+            fetched-jobs.csv
+            discovery-report.md
+          if-no-files-found: warn
+          retention-days: 30

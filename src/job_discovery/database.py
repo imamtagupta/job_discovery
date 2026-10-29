@@ -1,13 +1,30 @@
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import ArgumentError
 from sqlalchemy.orm import Session, sessionmaker
 
 from .models import Base
 
 
+class DatabaseConfigurationError(ValueError):
+    """Raised when DATABASE_URL is absent or cannot be parsed safely."""
+
+
 def make_engine(database_url: str) -> Engine:
+    if not database_url or not database_url.strip():
+        raise DatabaseConfigurationError(
+            "DATABASE_URL is empty. Configure a SQLAlchemy URL such as "
+            "postgresql+psycopg://USER:PASSWORD@HOST:5432/DATABASE."
+        )
     kwargs = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
-    return create_engine(database_url, pool_pre_ping=True, connect_args=kwargs)
+    try:
+        return create_engine(database_url, pool_pre_ping=True, connect_args=kwargs)
+    except ArgumentError as exc:
+        raise DatabaseConfigurationError(
+            "DATABASE_URL is not a valid SQLAlchemy URL. Expected, for example, "
+            "postgresql+psycopg://USER:PASSWORD@HOST:5432/DATABASE. "
+            "URL-encode special characters in the username or password."
+        ) from exc
 
 
 def session_factory(engine: Engine) -> sessionmaker[Session]:

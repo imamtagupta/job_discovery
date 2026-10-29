@@ -8,9 +8,14 @@ import typer
 from discovery.ats_detector import discover_registry, registry_summary, validate_registry
 
 from .config import load_companies, load_yaml
-from .database import initialize_database, make_engine, session_factory
+from .database import (
+    DatabaseConfigurationError,
+    initialize_database,
+    make_engine,
+    session_factory,
+)
 from .pipeline import rescore_jobs, run_discovery, sync_source_definitions
-from .services.reporting import build_discovery_report
+from .services.reporting import build_discovery_report, export_jobs_csv
 from .services.sheets import SheetsSync
 from .settings import Settings
 
@@ -27,7 +32,10 @@ def context():
         level=settings.log_level,
         format="%(asctime)s level=%(levelname)s logger=%(name)s message=%(message)s",
     )
-    engine = make_engine(settings.database_url)
+    try:
+        engine = make_engine(settings.database_url)
+    except DatabaseConfigurationError as exc:
+        raise typer.BadParameter(str(exc), param_hint="DATABASE_URL") from None
     return settings, engine, session_factory(engine)
 
 
@@ -155,14 +163,30 @@ def list_sources() -> None:
 
 
 @app.command("report")
-def report(output: str = "discovery_report.md") -> None:
+def report(
+    output: str = "discovery_report.md",
+    since_hours: int | None = typer.Option(None, min=1),
+) -> None:
     """Generate an evidence-based report from the latest stored collection."""
     settings, engine, factory = context()
     initialize_database(engine)
     with factory() as session:
         researched = len(load_yaml(settings.target_companies_config).get("companies", []))
-        summary = build_discovery_report(session, Path(output), researched)
+        summary = build_discovery_report(session, Path(output), researched, since_hours)
     _print_source_summary(summary)
+
+
+@app.command("export-jobs")
+def export_jobs(
+    output: str = "jobs.csv",
+    since_hours: int | None = typer.Option(None, min=1),
+) -> None:
+    """Export all active fetched jobs to a spreadsheet-safe CSV file."""
+    _, engine, factory = context()
+    initialize_database(engine)
+    with factory() as session:
+        count = export_jobs_csv(session, Path(output), since_hours)
+    typer.echo(f"Exported {count} active jobs to {output}.")
 
 
 if __name__ == "__main__":

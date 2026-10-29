@@ -14,7 +14,7 @@ A production-minded, zero-paid-API job discovery service. It collects directly f
 - Explainable configurable scoring with explicit unknown salary and work-authorization states
 - Incremental four-tab Google Sheets sync that preserves application status and notes and neutralizes formula injection
 - Console notifications only for newly discovered high-scoring jobs
-- Twice-daily GitHub Actions schedule at approximately 08:00 and 20:00 IST
+- Daily GitHub Actions schedule at approximately 08:00 IST
 - ATS registry discovery from 150 curated company career-page candidates
 - Greenhouse, Lever, Ashby, and modular Workday source detection and validation
 - Resume-verified multi-stage matching with role-family, eligibility, freshness, and priority metrics
@@ -44,6 +44,8 @@ python -m src.main discover-sources
 python -m src.main validate-sources
 python -m src.main list-sources
 python -m src.main report --output discovery_report.md
+python -m src.main export-jobs --output fetched-jobs.csv
+python -m src.main export-jobs --output fetched-jobs.csv --since-hours 24
 pytest
 ruff check .
 ```
@@ -83,6 +85,11 @@ GitHub-hosted runners are ephemeral, so scheduled execution must use a persisten
 - `GOOGLE_SERVICE_ACCOUNT_JSON` (optional, full JSON document)
 
 The workflow does not commit databases or credentials. GitHub Actions cron is UTC and may start later during scheduler load.
+Each run uploads `fetched-jobs.csv` and `discovery-report.md` as a downloadable GitHub
+Actions artifact retained for 30 days. The scheduled CSV and report contain jobs first discovered
+within the preceding 24 hours, preventing the same unchanged jobs from appearing every day. ATS
+collection still scans complete boards so updates and missing jobs can be tracked correctly. A
+first-discovered timestamp is not presented as the employer's actual posting date.
 
 ## Adding an ATS
 
