@@ -78,9 +78,14 @@ The sync creates `New Matches`, `All Jobs`, `Applications`, and `Source Health`.
 
 ## Scheduled persistence
 
-GitHub-hosted runners are ephemeral, so scheduled execution must use a persistent PostgreSQL `DATABASE_URL`; a local SQLite file is suitable only for local development. Free PostgreSQL tiers may sleep or change terms, so verify the provider’s current limits. Add these repository secrets:
+GitHub-hosted runners are ephemeral. A persistent PostgreSQL `DATABASE_URL` is recommended for
+durable scheduled history. When that secret is absent, the workflow uses SQLite restored through
+the GitHub Actions cache so zero-credential test runs retain recent discovery state. Cache storage
+can be evicted and is not a database backup, so use PostgreSQL for reliable long-term operation.
+Free PostgreSQL tiers may sleep or change terms, so verify the provider’s current limits. Add these
+repository secrets:
 
-- `DATABASE_URL` (required for durable scheduled history)
+- `DATABASE_URL` (optional for testing; required for durable scheduled history)
 - `GOOGLE_SHEETS_SPREADSHEET_ID` (optional)
 - `GOOGLE_SERVICE_ACCOUNT_JSON` (optional, full JSON document)
 

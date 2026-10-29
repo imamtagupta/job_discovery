@@ -19,7 +19,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # PostgreSQL is preferred. Cache-backed SQLite keeps zero-credential test runs stateful.
+      DATABASE_URL: ${{ secrets.DATABASE_URL || 'sqlite:///job_discovery.db' }}
+      USE_SQLITE_CACHE: ${{ secrets.DATABASE_URL == '' }}
       GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
       GOOGLE_SERVICE_ACCOUNT_JSON: service-account.json
       SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
@@ -33,11 +35,20 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: python -m pip install ".[postgres]"
-      - name: Validate required secrets
+      - name: Restore cached SQLite database
+        if: ${{ env.USE_SQLITE_CACHE == 'true' }}
+        uses: actions/cache@v6
+        with:
+          path: job_discovery.db
+          key: job-discovery-db-${{ github.run_id }}
+          restore-keys: |
+            job-discovery-db-
+      - name: Show persistence mode
         run: |
-          if [ -z "$DATABASE_URL" ]; then
-            echo "::error::DATABASE_URL is missing. Add a persistent PostgreSQL URL in repository Actions secrets."
-            exit 1
+          if [ "$USE_SQLITE_CACHE" = "true" ]; then
+            echo "Using cache-backed SQLite. Configure DATABASE_URL for durable PostgreSQL storage."
+          else
+            echo "Using persistent DATABASE_URL storage."
           fi
       - name: Write Google credentials
         if: ${{ env.SERVICE_ACCOUNT_JSON != '' }}
