@@ -32,14 +32,14 @@ def test_extracts_supported_and_unsupported_urls():
         "acme", "Acme", html, "https://acme.example/careers"
     )
     providers = {candidate.provider for candidate in candidates}
-    assert providers == {"greenhouse", "ashby", "workday"}
+    assert providers == {"greenhouse", "ashby", "workday", "smartrecruiters"}
     workday = next(item for item in candidates if item.provider == "workday")
     assert workday.identifiers == {
         "tenant": "acme",
         "workday_cluster": "wd5",
         "site_id": "External",
     }
-    assert unsupported[0]["provider"] == "smartrecruiters"
+    assert unsupported == []
 
 
 async def test_provider_schema_validation():

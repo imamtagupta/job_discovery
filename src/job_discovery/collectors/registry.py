@@ -1,9 +1,16 @@
 from collections.abc import Callable
 
+from .amazon import AmazonCollector
+from .apple import AppleCollector
 from .ashby import AshbyCollector
 from .base import AsyncHttpClient, Collector
+from .google import GoogleCollector
 from .greenhouse import GreenhouseCollector
+from .icims import IcimsCollector
 from .lever import LeverCollector
+from .oracle import OracleRecruitingCollector
+from .sitemap import SitemapCollector
+from .smartrecruiters import SmartRecruitersCollector
 from .workday import WorkdayCollector
 
 COLLECTORS: dict[str, Callable[[AsyncHttpClient], Collector]] = {
@@ -11,6 +18,13 @@ COLLECTORS: dict[str, Callable[[AsyncHttpClient], Collector]] = {
     "lever": LeverCollector,
     "ashby": AshbyCollector,
     "workday": WorkdayCollector,
+    "smartrecruiters": SmartRecruitersCollector,
+    "oracle-recruiting": OracleRecruitingCollector,
+    "icims": IcimsCollector,
+    "amazon": AmazonCollector,
+    "apple": AppleCollector,
+    "google": GoogleCollector,
+    "sitemap": SitemapCollector,
 }
 
 

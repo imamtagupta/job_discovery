@@ -53,6 +53,8 @@ jobs:
       - name: Write Google credentials
         if: ${{ env.SERVICE_ACCOUNT_JSON != '' }}
         run: printf '%s' "$SERVICE_ACCOUNT_JSON" > service-account.json
+      - name: Refresh and validate public ATS sources
+        run: job-discovery discover-sources
       - name: Validate configuration
         run: job-discovery validate-config
       - name: Initialize database

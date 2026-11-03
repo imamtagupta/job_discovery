@@ -428,3 +428,46 @@ companies:
       validation_url: https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs
       validated_at: '2026-11-02T19:23:27+00:00'
       job_count_at_validation: 469
+- id: amazon
+  name: Amazon
+  product_company: true
+  enabled: true
+  sources:
+  - type: amazon
+    location_filter: India
+    enabled: true
+- id: google
+  name: Google
+  product_company: true
+  enabled: true
+  sources:
+  - type: google
+    career_url: https://www.google.com/about/careers/applications/jobs/results/
+    location_filter: India
+    max_pages: 25
+    enabled: true
+- id: apple
+  name: Apple
+  product_company: true
+  enabled: true
+  sources:
+  - type: apple
+    career_url: https://jobs.apple.com/en-in/search?location=india-INDC
+    max_pages: 25
+    enabled: true
+- id: nvidia
+  name: NVIDIA
+  product_company: true
+  enabled: true
+  sources:
+  - type: workday
+    tenant: nvidia
+    workday_cluster: wd5
+    site_id: NVIDIAExternalCareerSite
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite
+      validation_url: https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs
+      validated_at: '2026-11-03T00:00:00+00:00'
+      job_count_at_validation: 2000

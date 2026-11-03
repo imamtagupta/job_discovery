@@ -7,7 +7,20 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 class SourceConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
-    type: Literal["greenhouse", "lever", "ashby", "workday", "smartrecruiters", "custom"]
+    type: Literal[
+        "greenhouse",
+        "lever",
+        "ashby",
+        "workday",
+        "smartrecruiters",
+        "oracle-recruiting",
+        "icims",
+        "amazon",
+        "apple",
+        "google",
+        "sitemap",
+        "custom",
+    ]
     enabled: bool = True
     board_token: str | None = None
     board_name: str | None = None
@@ -17,6 +30,14 @@ class SourceConfig(BaseModel):
     tenant: str | None = None
     workday_cluster: str | None = None
     site_id: str | None = None
+    company_identifier: str | None = None
+    oracle_host: str | None = None
+    site_number: str | None = None
+    career_url: str | None = None
+    sitemap_url: str | None = None
+    job_url_pattern: str | None = None
+    location_filter: str | None = None
+    max_pages: int = 25
 
     @model_validator(mode="after")
     def validate_required_identifier(self) -> "SourceConfig":
@@ -27,6 +48,12 @@ class SourceConfig(BaseModel):
             "lever": ("site",),
             "ashby": ("board_name",),
             "workday": ("tenant", "workday_cluster", "site_id"),
+            "smartrecruiters": ("company_identifier",),
+            "oracle-recruiting": ("oracle_host", "site_number"),
+            "icims": ("career_url",),
+            "apple": ("career_url",),
+            "google": ("career_url",),
+            "sitemap": ("sitemap_url", "job_url_pattern"),
         }
         missing = [name for name in required.get(self.type, ()) if not getattr(self, name)]
         if missing:

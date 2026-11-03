@@ -24,12 +24,17 @@ ATS_PATTERNS = {
         r"https?://([a-zA-Z0-9_-]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([a-zA-Z0-9_-]+)",
         re.I,
     ),
+    "smartrecruiters": re.compile(
+        r"https?://(?:careers|jobs)\.smartrecruiters\.com/([a-zA-Z0-9_-]+)", re.I
+    ),
+    "icims": re.compile(r"https?://([a-zA-Z0-9_-]+\.icims\.com)", re.I),
+    "oracle-recruiting": re.compile(
+        r"https?://([^/]*oraclecloud\.com)/hcmUI/CandidateExperience/[^/]+/sites/([^/?#]+)",
+        re.I,
+    ),
 }
 UNSUPPORTED_HOSTS = {
-    "smartrecruiters.com": "smartrecruiters",
-    "icims.com": "icims",
     "successfactors.com": "successfactors",
-    "oraclecloud.com": "oracle-recruiting",
     "bamboohr.com": "bamboohr",
     "workable.com": "workable",
 }
@@ -118,6 +123,15 @@ def extract_candidates(
                 }
             elif provider == "ashby":
                 identifiers = {"board_name": match.group(1)}
+            elif provider == "smartrecruiters":
+                identifiers = {"company_identifier": match.group(1)}
+            elif provider == "icims":
+                identifiers = {"career_url": f"https://{match.group(1)}"}
+            elif provider == "oracle-recruiting":
+                identifiers = {
+                    "oracle_host": f"https://{match.group(1)}",
+                    "site_number": match.group(2),
+                }
             else:
                 identifiers = {
                     "tenant": match.group(1),
@@ -222,6 +236,32 @@ class AtsDetector:
                     and isinstance(payload.get("total"), int)
                 )
                 count = payload.get("total") if valid else None
+            elif candidate.provider == "smartrecruiters":
+                identifier = candidate.identifiers["company_identifier"]
+                url = f"https://api.smartrecruiters.com/v1/companies/{identifier}/postings"
+                payload = await self.http.get_json(url, params={"limit": 1, "offset": 0})
+                valid = isinstance(payload, dict) and isinstance(payload.get("content"), list)
+                count = payload.get("totalFound") if valid else None
+            elif candidate.provider == "icims":
+                url = f"{candidate.identifiers['career_url'].rstrip('/')}/jobs/search"
+                response = await self.http.request("GET", url, params={"ss": 1})
+                valid = response.status_code == 200 and "/jobs/" in response.text
+                count = None
+            elif candidate.provider == "oracle-recruiting":
+                ids = candidate.identifiers
+                url = (
+                    f"{ids['oracle_host']}/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+                )
+                payload = await self.http.get_json(
+                    url,
+                    params={
+                        "onlyData": "true",
+                        "limit": 1,
+                        "finder": f"findReqs;siteNumber={ids['site_number']}",
+                    },
+                )
+                valid = isinstance(payload, dict) and isinstance(payload.get("items"), list)
+                count = payload.get("count") if valid else None
             else:
                 return ValidationResult(candidate, "unsupported", reason="no validator")
         except Exception as exc:
@@ -387,6 +427,9 @@ def candidate_from_record(record: dict[str, Any]) -> CandidateSource | None:
             "lever": ("site", "region"),
             "ashby": ("board_name",),
             "workday": ("tenant", "workday_cluster", "site_id"),
+            "smartrecruiters": ("company_identifier",),
+            "oracle-recruiting": ("oracle_host", "site_number"),
+            "icims": ("career_url",),
         }.get(provider, ())
         identifiers = {name: record[name] for name in names if record.get(name) is not None}
     if provider not in ATS_PATTERNS or not identifiers:

@@ -4,7 +4,8 @@ A production-minded, zero-paid-API job discovery service. It collects directly f
 
 ## What is implemented
 
-- Async Greenhouse Job Board and Lever Postings collectors with regional Lever endpoints
+- Async Greenhouse, Lever, Ashby, Workday, SmartRecruiters, Oracle Recruiting, and iCIMS collectors
+- First-party India collectors for Amazon Jobs, Google Careers, Apple Jobs, and NVIDIA Careers
 - Extensible collector registry and collector-level failure isolation
 - Per-host concurrency, timeouts, bounded exponential retries, and HTTP 429 `Retry-After` handling
 - Normalized companies, sources, jobs, observations, scores, applications, runs, and errors
@@ -15,11 +16,12 @@ A production-minded, zero-paid-API job discovery service. It collects directly f
 - Incremental Google Sheets sync with targeted views that preserves application status and notes and neutralizes formula injection
 - Console notifications only for newly discovered high-scoring jobs
 - Daily GitHub Actions schedule at approximately 08:00 IST
+- Daily refresh and validation of public ATS sources before job collection
 - ATS registry discovery from 150 curated company career-page candidates
 - Greenhouse, Lever, Ashby, and modular Workday source detection and validation
 - Resume-verified multi-stage matching with role-family, eligibility, freshness, and priority metrics
 
-Ashby, Workday, SmartRecruiters, and custom endpoints are accepted configuration types but deliberately fail as “not implemented” until a tested adapter is added. Workday adapters must be tenant-specific because request bodies, sites, pagination, and schemas vary. A failed adapter is recorded without stopping healthy sources.
+Custom endpoints still require a tested adapter. A failed adapter is recorded without stopping healthy sources.
 
 ## Setup
 
