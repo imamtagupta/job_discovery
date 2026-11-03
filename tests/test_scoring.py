@@ -1,4 +1,4 @@
-from job_discovery.models import Job
+from job_discovery.models import Company, Job
 from job_discovery.services.scoring import score_job
 
 
@@ -77,3 +77,22 @@ def test_ai_agent_backend_role_uses_resume_achievement(profile, scoring_config):
     assert result.role_family == "AI Application Engineering"
     assert "ai_diagnostics" in result.transferable_skills
     assert result.resume_relevance >= 70
+
+
+def test_product_company_increases_application_priority(profile, scoring_config):
+    standard = make_job()
+    standard.company = Company(
+        id="acme", name="Acme", normalized_name="acme", product_company=False
+    )
+    product = make_job(id=2, stable_id="y", external_job_id="2", company_id="product-co")
+    product.company = Company(
+        id="product-co", name="Product Co", normalized_name="product co", product_company=True
+    )
+
+    standard_result = score_job(standard, profile, scoring_config)
+    product_result = score_job(product, profile, scoring_config)
+
+    assert product_result.company_preference == 100
+    assert standard_result.company_preference == 50
+    assert product_result.application_priority > standard_result.application_priority
+    assert any("Product-based company" in reason for reason in product_result.reasons)

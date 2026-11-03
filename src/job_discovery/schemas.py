@@ -51,6 +51,7 @@ class ScoreResult(BaseModel):
     resume_relevance: float = Field(default=0, ge=0, le=100)
     application_eligibility: float = Field(default=0, ge=0, le=100)
     posting_freshness: float = Field(default=0, ge=0, le=100)
+    company_preference: float = Field(default=0, ge=0, le=100)
     application_priority: float = Field(default=0, ge=0, le=100)
     rejected: bool = False
     matched_skills: list[str] = Field(default_factory=list)

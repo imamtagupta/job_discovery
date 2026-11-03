@@ -195,10 +195,35 @@ def score_job(job: Job, profile: dict[str, Any], config: dict[str, Any]) -> Scor
     )
     resume_relevance = round(100 * sum(breakdown[key] for key in relevant) / 80, 2)
     posting_freshness = fresh_points * 20
+    product_company = bool(job.company and job.company.product_company)
+    company_preferences = config.get("company_preferences", {})
+    company_preference = float(
+        company_preferences.get(
+            "product_company_priority" if product_company else "other_company_priority",
+            100 if product_company else 50,
+        )
+    )
+    if product_company:
+        reasons.append("Product-based company preference applied")
+    priority_weights = config.get(
+        "application_priority_weights",
+        {
+            "resume_relevance": 0.60,
+            "eligibility": 0.15,
+            "freshness": 0.10,
+            "company_preference": 0.15,
+        },
+    )
     application_priority = (
         0
         if rejected
-        else round(0.7 * resume_relevance + 0.2 * eligibility + 0.1 * posting_freshness, 2)
+        else round(
+            priority_weights["resume_relevance"] * resume_relevance
+            + priority_weights["eligibility"] * eligibility
+            + priority_weights["freshness"] * posting_freshness
+            + priority_weights["company_preference"] * company_preference,
+            2,
+        )
     )
     signals = sum(
         (bool(description), bool(job.location), bool(experience_values), bool(job.source_posted_at))
@@ -224,6 +249,7 @@ def score_job(job: Job, profile: dict[str, Any], config: dict[str, Any]) -> Scor
         resume_relevance=resume_relevance,
         application_eligibility=eligibility,
         posting_freshness=posting_freshness,
+        company_preference=company_preference,
         application_priority=application_priority,
         rejected=rejected,
         matched_skills=matched,

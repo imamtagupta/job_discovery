@@ -107,6 +107,10 @@ def build_discovery_report(
     jobs = list(session.scalars(jobs_query))
     scores = {item.job_id: item for item in session.scalars(select(JobMatchScore))}
     companies = {item.id: item.name for item in session.scalars(select(Company))}
+    product_company_ids = {
+        item.id
+        for item in session.scalars(select(Company).where(Company.product_company.is_(True)))
+    }
     sources = list(session.scalars(select(AtsSource).where(AtsSource.enabled.is_(True))))
     failures = 0
     if latest:
@@ -152,6 +156,7 @@ def build_discovery_report(
         + family_counts["Cloud Infrastructure Software Engineering"],
         "ai_application_engineering_jobs": family_counts["AI Application Engineering"],
         "quant_fintech_engineering_jobs": family_counts["Quant / Financial Technology"],
+        "product_company_jobs": sum(job.company_id in product_company_ids for job in jobs),
         "jobs_scoring_80_plus": sum(
             job_id in active_ids and score.score >= 80 and not score.rejected
             for job_id, score in scores.items()

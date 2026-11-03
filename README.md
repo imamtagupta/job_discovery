@@ -12,7 +12,7 @@ A production-minded, zero-paid-API job discovery service. It collects directly f
 - Conservative cross-source duplicate linking (requisition ID, canonical URL, or exact title/location); ambiguous matches stay separate
 - New/updated/seen history and missing status only after a successful source response
 - Explainable configurable scoring with explicit unknown salary and work-authorization states
-- Incremental four-tab Google Sheets sync that preserves application status and notes and neutralizes formula injection
+- Incremental Google Sheets sync with targeted views that preserves application status and notes and neutralizes formula injection
 - Console notifications only for newly discovered high-scoring jobs
 - Daily GitHub Actions schedule at approximately 08:00 IST
 - ATS registry discovery from 150 curated company career-page candidates
@@ -61,8 +61,8 @@ identifiers are never replaced by a conflicting discovery.
 The structured candidate profile in `config/profile.yaml` is derived from the supplied resume.
 Scoring performs hard eligibility checks, role-family classification, evidence-based weighted
 relevance, and separate application eligibility, posting freshness, and application-priority
-metrics. The Sheets sync maintains `High Priority`, `Python Backend`, `Fintech - Quant`,
-`Global Opportunities`, and `Needs Review` views in addition to the complete jobs,
+metrics. The Sheets sync maintains `High Priority`, `Python Backend`, `Product Companies`,
+`Fintech - Quant`, `Global Opportunities`, and `Needs Review` views in addition to the complete jobs,
 applications, and source-health tabs.
 
 ## Google Sheets

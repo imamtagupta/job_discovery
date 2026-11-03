@@ -59,6 +59,10 @@ class SheetsSync:
         applications = {item.job_id: item for item in session.scalars(select(Application))}
         scores = {item.job_id: item for item in session.scalars(select(JobMatchScore))}
         companies = {item.id: item.name for item in session.scalars(select(Company))}
+        product_company_ids = {
+            item.id
+            for item in session.scalars(select(Company).where(Company.product_company.is_(True)))
+        }
         jobs = list(session.scalars(select(Job).order_by(Job.first_seen_at.desc())))
         rows = {job.id: self._row(job, companies, scores, applications) for job in jobs}
         active = [
@@ -78,6 +82,11 @@ class SheetsSync:
                 row
                 for _, score, row in active
                 if score and score.role_family == "Python Backend" and not score.rejected
+            ],
+            "Product Companies": [
+                row
+                for job, score, row in active
+                if job.company_id in product_company_ids and score and not score.rejected
             ],
             "Fintech - Quant": [
                 row

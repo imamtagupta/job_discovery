@@ -386,3 +386,45 @@ companies:
       validation_url: https://paloaltonetworks.wd5.myworkdayjobs.com/wday/cxs/paloaltonetworks/panwexternalcareers/jobs
       validated_at: '2026-10-26T19:01:41.981168+00:00'
       job_count_at_validation: 1400
+- id: datadog
+  name: Datadog
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: datadog
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://careers.datadoghq.com/
+      validation_url: https://boards-api.greenhouse.io/v1/boards/datadog/jobs
+      validated_at: '2026-11-02T19:23:27+00:00'
+      job_count_at_validation: 404
+- id: mongodb
+  name: MongoDB
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: mongodb
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://www.mongodb.com/company/careers/see-jobs
+      validation_url: https://boards-api.greenhouse.io/v1/boards/mongodb/jobs
+      validated_at: '2026-11-02T19:23:27+00:00'
+      job_count_at_validation: 358
+- id: cloudflare
+  name: Cloudflare
+  product_company: true
+  enabled: true
+  sources:
+  - type: greenhouse
+    board_token: cloudflare
+    enabled: true
+    verification:
+      status: verified
+      evidence_url: https://www.cloudflare.com/careers/jobs/
+      validation_url: https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs
+      validated_at: '2026-11-02T19:23:27+00:00'
+      job_count_at_validation: 469

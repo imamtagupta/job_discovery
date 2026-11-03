@@ -8,6 +8,14 @@ weights:
   freshness: 5
 high_score_threshold: 80
 review_score_threshold: 65
+company_preferences:
+  product_company_priority: 100
+  other_company_priority: 50
+application_priority_weights:
+  resume_relevance: 0.60
+  eligibility: 0.15
+  freshness: 0.10
+  company_preference: 0.15
 hard_filters:
   excluded_title_terms: [intern, internship, graduate, fresher, junior, qa engineer, sdet, test engineer, automation tester, tester, data analyst, business intelligence, data scientist, research scientist, mobile engineer, frontend engineer, front-end engineer, helpdesk, technical support, professional services consultant, customer solution architect, product manager]
   overleveled_title_terms: [staff, principal, distinguished engineer, engineering manager, director of engineering]
