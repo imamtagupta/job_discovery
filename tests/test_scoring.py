@@ -41,6 +41,24 @@ def test_hard_filter_rejects_intern(profile, scoring_config):
     assert result.score == 0
 
 
+def test_current_and_past_employers_are_rejected(profile, scoring_config):
+    for company_name in (
+        "JPMorgan Chase",
+        "Blueray Automation Pvt Ltd",
+        "Go Digital Technology Consulting LLP",
+    ):
+        job = make_job()
+        job.company = Company(
+            id="excluded-company",
+            name=company_name,
+            normalized_name=company_name.lower(),
+        )
+        result = score_job(job, profile, scoring_config)
+        assert result.rejected
+        assert result.application_priority == 0
+        assert any("excluded current or past employer" in reason for reason in result.reasons)
+
+
 def test_java_only_mandatory_role_is_rejected(profile, scoring_config):
     job = make_job(
         title="Senior Java Backend Engineer",

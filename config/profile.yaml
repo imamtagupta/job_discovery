@@ -5,6 +5,13 @@ candidate:
   current_employer: JPMorgan Chase & Co.
   current_title: Associate Software Engineer
   resume_verified: true
+excluded_employers:
+  - name: JPMorgan Chase & Co.
+    aliases: [jpmorgan chase, jp morgan chase, jpmorgan, jpmc, chase]
+  - name: Blueray Automation
+    aliases: [blueray automation, blue ray automation]
+  - name: Go Digital Technology Consulting LLP
+    aliases: [go digital technology consulting, go digital technology consulting llp]
 skill_tiers:
   tier_1:
     python: [python]

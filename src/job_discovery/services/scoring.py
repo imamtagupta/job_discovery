@@ -93,6 +93,21 @@ def score_job(job: Job, profile: dict[str, Any], config: dict[str, Any]) -> Scor
     text = f"{title} {description.lower()}"
     hard = config["hard_filters"]
     rejection = [term for term in hard["excluded_title_terms"] if _contains(title, term)]
+    company_name = job.company.name if job.company else job.company_id
+    normalized_company = re.sub(r"[^a-z0-9]+", " ", company_name.lower()).strip()
+    excluded_employer = next(
+        (
+            employer["name"]
+            for employer in profile.get("excluded_employers", [])
+            if any(
+                re.sub(r"[^a-z0-9]+", " ", alias.lower()).strip() in normalized_company
+                for alias in [employer["name"], *employer.get("aliases", [])]
+            )
+        ),
+        None,
+    )
+    if excluded_employer:
+        rejection.append(f"excluded current or past employer: {excluded_employer}")
     if job.employment_type and job.employment_type.lower() in hard["excluded_employment_types"]:
         rejection.append(f"employment type: {job.employment_type}")
 
