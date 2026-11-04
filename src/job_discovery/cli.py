@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 from pathlib import Path
+from typing import Annotated
 
 import typer
 
@@ -15,6 +16,7 @@ from .database import (
     session_factory,
 )
 from .pipeline import rescore_jobs, run_discovery, sync_source_definitions
+from .services.application_faq import add_faq_entry, record_unseen_question, resolve_question
 from .services.applications import prepare_application_queue
 from .services.reporting import build_discovery_report, export_jobs_csv
 from .services.sheets import SheetsSync
@@ -57,6 +59,7 @@ def validate_config() -> None:
     companies = load_companies(settings.companies_config)
     load_yaml(settings.profile_config)
     load_yaml(settings.scoring_config)
+    load_yaml(settings.application_faq_config)
     enabled = sum(c.enabled for c in companies.companies)
     typer.echo(f"Configuration valid: {len(companies.companies)} companies ({enabled} enabled).")
 
@@ -207,6 +210,41 @@ def prepare_applications(
             minimum_score=minimum_score,
         )
     typer.echo(f"Prepared {count} jobs for application review in {output}.")
+
+
+@app.command("faq-check")
+def faq_check(
+    question: str,
+    source: str | None = typer.Option(None),
+) -> None:
+    """Resolve a form question from approved answers or record it for review."""
+    settings, _, _ = context()
+    result = resolve_question(settings.application_faq_config, question)
+    if result["status"] == "unseen":
+        record_unseen_question(settings.application_question_backlog, question, source)
+    typer.echo(json.dumps(result, indent=2, sort_keys=True))
+
+
+@app.command("faq-add")
+def faq_add(
+    key: str,
+    question: str,
+    answer: str,
+    alias: Annotated[list[str] | None, typer.Option()] = None,
+) -> None:
+    """Add a user-approved answer for future application forms."""
+    settings, _, _ = context()
+    try:
+        add_faq_entry(
+            settings.application_faq_config,
+            key=key,
+            question=question,
+            answer=answer,
+            aliases=alias,
+        )
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc), param_hint="key") from None
+    typer.echo(f"Added approved FAQ answer: {key}")
 
 
 if __name__ == "__main__":

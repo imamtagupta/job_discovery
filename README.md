@@ -49,6 +49,8 @@ python -m src.main report --output discovery_report.md
 python -m src.main export-jobs --output fetched-jobs.csv
 python -m src.main export-jobs --output fetched-jobs.csv --since-hours 24
 job-discovery prepare-applications --output application-queue.csv --since-hours 24
+job-discovery faq-check "How many years of experience do you have?"
+job-discovery faq-add notice_period_days "What is your notice period in days?" "30"
 pytest
 ruff check .
 ```
@@ -101,6 +103,14 @@ first-discovered timestamp is not presented as the employer's actual posting dat
 The workflow also creates `application-queue.csv` containing only new, active, eligible matches
 scoring at least 80. Queue creation never submits an application; every application remains subject
 to explicit review and approval.
+
+## Application question knowledge base
+
+Approved reusable form answers live in `config/application_faq.yaml`. Matching is deliberately
+strict: known wording is answered, while unseen wording is appended to
+`config/application_question_backlog.yaml` for review. Questions involving work authorization,
+visa sponsorship, notice period, or compensation remain `needs_review` until an explicit answer is
+provided. The system never guesses an answer and never treats demographic questions as required.
 
 ## Adding an ATS
 

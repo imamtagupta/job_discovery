@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     source_health_config: Path = Path("config/source_health.yaml")
     profile_config: Path = Path("config/profile.yaml")
     scoring_config: Path = Path("config/scoring.yaml")
+    application_faq_config: Path = Path("config/application_faq.yaml")
+    application_question_backlog: Path = Path("config/application_question_backlog.yaml")
     log_level: str = "INFO"
     http_timeout_seconds: float = 20
     http_per_host_concurrency: int = 3
