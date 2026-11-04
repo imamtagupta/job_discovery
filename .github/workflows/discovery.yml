@@ -69,6 +69,7 @@ jobs:
         run: |
           job-discovery export-jobs --output fetched-jobs.csv --since-hours 24
           job-discovery report --output discovery-report.md --since-hours 24
+          job-discovery prepare-applications --output application-queue.csv --since-hours 24
       - name: Sync Google Sheets
         if: ${{ env.SERVICE_ACCOUNT_JSON != '' && env.GOOGLE_SHEETS_SPREADSHEET_ID != '' }}
         run: job-discovery sync-sheets
@@ -80,5 +81,6 @@ jobs:
           path: |
             fetched-jobs.csv
             discovery-report.md
+            application-queue.csv
           if-no-files-found: warn
           retention-days: 30

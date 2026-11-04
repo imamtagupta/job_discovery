@@ -15,6 +15,7 @@ from .database import (
     session_factory,
 )
 from .pipeline import rescore_jobs, run_discovery, sync_source_definitions
+from .services.applications import prepare_application_queue
 from .services.reporting import build_discovery_report, export_jobs_csv
 from .services.sheets import SheetsSync
 from .settings import Settings
@@ -187,6 +188,25 @@ def export_jobs(
     with factory() as session:
         count = export_jobs_csv(session, Path(output), since_hours)
     typer.echo(f"Exported {count} active jobs to {output}.")
+
+
+@app.command("prepare-applications")
+def prepare_applications(
+    output: str = "application-queue.csv",
+    since_hours: int = typer.Option(24, min=1),
+    minimum_score: float = typer.Option(80, min=0, max=100),
+) -> None:
+    """Create an approval queue for strong new matches; never submits applications."""
+    _, engine, factory = context()
+    initialize_database(engine)
+    with factory() as session:
+        count = prepare_application_queue(
+            session,
+            Path(output),
+            since_hours=since_hours,
+            minimum_score=minimum_score,
+        )
+    typer.echo(f"Prepared {count} jobs for application review in {output}.")
 
 
 if __name__ == "__main__":

@@ -48,6 +48,7 @@ python -m src.main list-sources
 python -m src.main report --output discovery_report.md
 python -m src.main export-jobs --output fetched-jobs.csv
 python -m src.main export-jobs --output fetched-jobs.csv --since-hours 24
+job-discovery prepare-applications --output application-queue.csv --since-hours 24
 pytest
 ruff check .
 ```
@@ -97,6 +98,9 @@ Actions artifact retained for 30 days. The scheduled CSV and report contain jobs
 within the preceding 24 hours, preventing the same unchanged jobs from appearing every day. ATS
 collection still scans complete boards so updates and missing jobs can be tracked correctly. A
 first-discovered timestamp is not presented as the employer's actual posting date.
+The workflow also creates `application-queue.csv` containing only new, active, eligible matches
+scoring at least 80. Queue creation never submits an application; every application remains subject
+to explicit review and approval.
 
 ## Adding an ATS
 
