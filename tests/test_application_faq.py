@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import yaml
 
 from job_discovery.services.application_faq import (
@@ -51,3 +53,12 @@ def test_add_approved_faq_entry(tmp_path):
     result = resolve_question(path, "Are you willing to travel?")
     assert result["status"] == "approved"
     assert result["answer"] == "Yes, up to 10%"
+
+
+def test_sponsorship_answer_is_conditional_by_location():
+    result = resolve_question(
+        Path("config/application_faq.yaml"),
+        "Do you require employment sponsorship?",
+    )
+    assert result["status"] == "approved"
+    assert result["answer"] == {"india": "No", "outside_india": "Yes"}

@@ -30,13 +30,17 @@ entries:
   - key: work_authorization
     question: Are you legally authorized to work in this job's country?
     aliases: ["Are you authorized to work in this location?"]
-    answer: null
-    status: needs_review
+    answer:
+      india: "Yes"
+      outside_india: "No"
+    status: approved
   - key: visa_sponsorship
     question: Will you now or in the future require visa sponsorship?
     aliases: ["Do you require employment sponsorship?"]
-    answer: null
-    status: needs_review
+    answer:
+      india: "No"
+      outside_india: "Yes"
+    status: approved
   - key: compensation
     question: What are your salary expectations?
     aliases: [Expected compensation, Expected salary]

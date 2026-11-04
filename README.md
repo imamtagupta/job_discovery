@@ -109,8 +109,9 @@ to explicit review and approval.
 Approved reusable form answers live in `config/application_faq.yaml`. Matching is deliberately
 strict: known wording is answered, while unseen wording is appended to
 `config/application_question_backlog.yaml` for review. Questions involving work authorization,
-visa sponsorship, notice period, or compensation remain `needs_review` until an explicit answer is
-provided. The system never guesses an answer and never treats demographic questions as required.
+notice period or compensation remain `needs_review` until an explicit answer is provided. Work
+authorization and sponsorship answers are conditional on whether the role is in India. The system
+never guesses an answer and never treats demographic questions as required.
 
 ## Adding an ATS
 
