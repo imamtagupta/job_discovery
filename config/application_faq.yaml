@@ -36,7 +36,9 @@ entries:
     status: approved
   - key: visa_sponsorship
     question: Will you now or in the future require visa sponsorship?
-    aliases: ["Do you require employment sponsorship?"]
+    aliases:
+      - Do you require employment sponsorship?
+      - Will you now or in the future require employment sponsorship?
     answer:
       india: "No"
       outside_india: "Yes"
@@ -46,3 +48,18 @@ entries:
     aliases: [Expected compensation, Expected salary]
     answer: null
     status: needs_review
+  - key: former_mongodb_employee
+    question: Have you ever worked at MongoDB before?
+    aliases: ["Have you previously worked at MongoDB?"]
+    answer: "No"
+    status: approved
+  - key: gender_identity
+    question: Gender Identity (Select one)
+    aliases: [Gender identity]
+    answer: Decline to self-identify
+    status: approved
+  - key: demographic_consent
+    question: By checking this box, I consent to MongoDB collecting, storing, and processing my responses to the demographic data surveys above.
+    aliases: [Demographic data processing consent]
+    answer: "Yes"
+    status: approved

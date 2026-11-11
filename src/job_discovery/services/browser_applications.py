@@ -93,10 +93,12 @@ def answer_for_question(
         (("first name", "given name"), application.get("first_name")),
         (("last name", "family name", "surname"), application.get("last_name")),
         (("full name", "name"), candidate.get("name")),
+        (("preferred name",), application.get("preferred_name")),
         (("email", "email address"), application.get("email")),
         (("phone", "phone number", "mobile", "mobile number"), application.get("phone")),
         (("linkedin", "linkedin profile"), application.get("linkedin")),
-        (("current location", "location", "city"), candidate.get("location")),
+        (("country",), application.get("country")),
+        (("current location", "location", "location city", "city"), candidate.get("location")),
     ]
     for aliases, answer in direct_answers:
         if answer and normalized in aliases:
@@ -163,18 +165,12 @@ def _stage_page(
     resume_path: Path,
     result: StagingResult,
 ) -> None:
-    file_inputs = page.locator('input[type="file"]')
-    for index in range(file_inputs.count()):
-        field = file_inputs.nth(index)
-        question = _field_question(field)
-        normalized = question.casefold()
-        is_resume = any(word in normalized for word in ("resume", "résumé", "cv"))
-        if field.is_enabled() and (is_resume or file_inputs.count() == 1):
-            field.set_input_files(str(resume_path.resolve()))
-            result.filled_fields.append(question)
-        elif field.is_enabled():
-            result.unresolved_questions.append(question)
-            record_unseen_question(backlog_path, question, row.get("direct_apply_url"))
+    resume_input = page.locator('input[type="file"]#resume')
+    if resume_input.count() == 0:
+        resume_input = page.locator('input[type="file"]').first
+    if resume_input.count() and resume_input.is_enabled():
+        resume_input.set_input_files(str(resume_path.resolve()))
+        result.filled_fields.append("Resume/CV")
 
     fields = page.locator("input:not([type=hidden]):not([type=file]), textarea, select")
     seen_questions: set[str] = set()
@@ -182,6 +178,8 @@ def _stage_page(
         locator = fields.nth(index)
         try:
             if not locator.is_visible() or not locator.is_enabled():
+                continue
+            if "requiredInput" in (locator.get_attribute("class") or ""):
                 continue
             field_type = (
                 locator.get_attribute("type") or locator.evaluate("el => el.tagName")
@@ -207,9 +205,17 @@ def _stage_page(
                     result.filled_fields.append(question)
                     continue
             if question not in seen_questions:
-                seen_questions.add(question)
-                result.unresolved_questions.append(question)
-                record_unseen_question(backlog_path, question, row.get("direct_apply_url"))
+                is_required = (
+                    locator.get_attribute("required") is not None
+                    or locator.get_attribute("aria-required") == "true"
+                    or "*" in question
+                )
+                if is_required:
+                    seen_questions.add(question)
+                    result.unresolved_questions.append(question)
+                    record_unseen_question(backlog_path, question, row.get("direct_apply_url"))
+                else:
+                    result.skipped_fields.append(f"Optional field left blank: {question}")
         except Exception as exc:
             result.skipped_fields.append(f"{_field_question(locator)}: {type(exc).__name__}")
 
@@ -220,6 +226,16 @@ def _stage_page(
         choice = required_choices.nth(index)
         if choice.is_visible() and choice.is_enabled() and not choice.is_checked():
             question = _field_question(choice)
+            status, answer = answer_for_question(
+                question,
+                profile=profile,
+                faq_path=faq_path,
+                location=row.get("location", ""),
+            )
+            if status == "approved" and str(answer).casefold() in {"yes", "true", "1"}:
+                choice.check()
+                result.filled_fields.append(question)
+                continue
             if question not in seen_questions:
                 seen_questions.add(question)
                 result.unresolved_questions.append(question)

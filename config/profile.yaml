@@ -8,8 +8,10 @@ candidate:
 application:
   first_name: Mamta
   last_name: Gupta
+  preferred_name: Mamta
   email: mamtaguptasde@gmail.com
   phone: "9082319147"
+  country: India
   linkedin: null
 excluded_employers:
   - name: JPMorgan Chase & Co.
