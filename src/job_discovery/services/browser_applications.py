@@ -44,7 +44,12 @@ def load_queue_job(queue_path: Path, stable_job_id: str | None = None) -> dict[s
     return candidates[0]
 
 
-def load_discovered_jobs(report_path: Path, jobs_path: Path) -> list[dict[str, str]]:
+def load_discovered_jobs(
+    report_path: Path,
+    jobs_path: Path,
+    *,
+    include_needs_review: bool = False,
+) -> list[dict[str, str]]:
     """Return eligible, unapplied CSV jobs with report recommendations first."""
     report = report_path.read_text(encoding="utf-8")
     report_urls = re.findall(r"^- Apply:\s+(\S+)\s*$", report, flags=re.MULTILINE)
@@ -52,10 +57,11 @@ def load_discovered_jobs(report_path: Path, jobs_path: Path) -> list[dict[str, s
     with jobs_path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
 
+    allowed_eligibility = {"eligible", "needs_review"} if include_needs_review else {"eligible"}
     candidates = [
         row
         for row in rows
-        if row.get("eligibility_status") == "eligible"
+        if row.get("eligibility_status") in allowed_eligibility
         and row.get("application_status", "not_applied") in {"", "not_applied", "ready_for_review"}
         and row.get("direct_apply_url")
     ]

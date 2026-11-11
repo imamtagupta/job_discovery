@@ -262,6 +262,9 @@ def apply_from_files(
     resume: str = typer.Option("MamtaGupta2026.1.pdf"),
     artifacts: str = typer.Option("application-artifacts"),
     limit: int = typer.Option(25, min=1),
+    include_needs_review: bool = typer.Option(
+        False, help="Also process report jobs whose eligibility still needs review."
+    ),
     submit: bool = typer.Option(False, help="Click Submit only when no answers are unresolved."),
 ) -> None:
     """Process report recommendations first, then remaining eligible fetched jobs."""
@@ -271,7 +274,9 @@ def apply_from_files(
     if not resume_path.is_file():
         raise typer.BadParameter(f"Resume not found: {resume_path}", param_hint="resume")
     try:
-        rows = load_discovered_jobs(Path(report), Path(jobs))[:limit]
+        rows = load_discovered_jobs(
+            Path(report), Path(jobs), include_needs_review=include_needs_review
+        )[:limit]
     except OSError as exc:
         raise typer.BadParameter(str(exc), param_hint="report/jobs") from None
 
