@@ -28,7 +28,7 @@ application:
       status: approved
     current_base:
       question: Where are you based?
-      aliases: [Please indicate your current city, state, and country.]
+      aliases: ["Please indicate your current city, state, and country."]
       answer: Mumbai, Maharashtra, India
       status: approved
     cloudflare_sponsorship:
