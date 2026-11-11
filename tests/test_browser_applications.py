@@ -61,6 +61,27 @@ def test_answer_for_question_uses_profile_and_location_aware_faq():
     ) == ("approved", "Yes")
 
 
+def test_answer_for_question_uses_profile_application_answers():
+    profile = {
+        "application": {
+            "answers": {
+                "source": {
+                    "question": "How did you hear about this job?",
+                    "aliases": ["How did you learn about this job?"],
+                    "answer": "Company careers page",
+                    "status": "approved",
+                }
+            }
+        }
+    }
+    assert answer_for_question(
+        "How did you learn about this job?",
+        profile=profile,
+        faq_path=Path("config/application_faq.yaml"),
+        location="India",
+    ) == ("approved", "Company careers page")
+
+
 def test_load_discovered_jobs_prioritizes_report_and_filters_ineligible(tmp_path):
     report = tmp_path / "report.md"
     report.write_text("- Apply: https://example.com/recommended\n", encoding="utf-8")

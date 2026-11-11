@@ -265,6 +265,9 @@ def apply_from_files(
     include_needs_review: bool = typer.Option(
         False, help="Also process report jobs whose eligibility still needs review."
     ),
+    job_id: Annotated[
+        list[str] | None, typer.Option(help="Only process these stable job ids.")
+    ] = None,
     submit: bool = typer.Option(False, help="Click Submit only when no answers are unresolved."),
 ) -> None:
     """Process report recommendations first, then remaining eligible fetched jobs."""
@@ -276,7 +279,11 @@ def apply_from_files(
     try:
         rows = load_discovered_jobs(
             Path(report), Path(jobs), include_needs_review=include_needs_review
-        )[:limit]
+        )
+        if job_id:
+            requested = set(job_id)
+            rows = [row for row in rows if row["stable_job_id"] in requested]
+        rows = rows[:limit]
     except OSError as exc:
         raise typer.BadParameter(str(exc), param_hint="report/jobs") from None
 

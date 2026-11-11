@@ -24,8 +24,8 @@ application:
       aliases:
         - Are you currently based or willing to relocate to the job location?
         - This role is based in Austin. Are you currently located in one of the hub locations or willing to relocate?
-      answer: null
-      status: needs_review
+      answer: "Yes"
+      status: approved
     current_base:
       question: Where are you based?
       aliases: [Please indicate your current city, state, and country.]
@@ -39,56 +39,60 @@ application:
       status: approved
     acknowledge_confirm:
       question: Acknowledge/Confirm
-      answer: null
-      status: needs_review
+      answer: "Yes"
+      status: approved
     eeo_gender:
       question: Gender
-      answer: null
-      status: needs_review
+      answer: Female
+      status: approved
     eeo_race:
       question: Race
-      answer: null
-      status: needs_review
+      answer: Asian
+      status: approved
+    eeo_ethnicity:
+      question: Ethnicity
+      answer: Asian
+      status: approved
     eeo_hispanic_latino:
       question: Are you Hispanic/Latino?
-      answer: null
-      status: needs_review
+      answer: "No"
+      status: approved
     eeo_veteran:
       question: Veteran Status
-      answer: null
-      status: needs_review
+      answer: "No"
+      status: approved
     eeo_disability:
       question: Disability Status
-      answer: null
-      status: needs_review
+      answer: "No"
+      status: approved
     relocation_assistance:
       question: Do you require relocation assistance for the role to which you are applying to?
-      answer: null
-      status: needs_review
+      answer: "Yes"
+      status: approved
     ambiguous_selection:
       question: "Please select one of the following:"
       answer: null
       status: needs_review
     english_proficiency:
       question: Are you professionally proficient in written and verbal English communication?
-      answer: null
-      status: needs_review
+      answer: "Yes"
+      status: approved
     linkedin_profile:
       question: LinkedIn Profile
-      answer: null
-      status: needs_review
+      answer: https://www.linkedin.com/in/mamtaguptasde/
+      status: approved
     go_proficiency:
       question: On a scale of 1–10, how would you rate your proficiency in Go? (1 = beginner; 10 = expert)
-      answer: null
-      status: needs_review
+      answer: 6
+      status: approved
     terraform_experience:
       question: In 1–2 sentences, describe your experience developing Terraform providers and/or using Terraform to manage infrastructure.
       answer: Led Terraform infrastructure-as-code across three environments, standardizing repeatable cloud provisioning and operational changes.
       status: approved
     legal_name_if_different:
       question: Legal Name (if different than above)
-      answer: null
-      status: needs_review
+      answer: "No"
+      status: approved
 excluded_employers:
   - name: JPMorgan Chase & Co.
     aliases: [jpmorgan chase, jp morgan chase, jpmorgan, jpmc, chase]

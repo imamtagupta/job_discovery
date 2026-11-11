@@ -110,6 +110,14 @@ def answer_for_question(
         if answer and normalized in aliases:
             return "approved", answer
 
+    for entry in application.get("answers", {}).values():
+        questions = [entry.get("question", ""), *entry.get("aliases", [])]
+        if normalized in {
+            " ".join(re.findall(r"[a-z0-9]+", item.casefold())) for item in questions
+        }:
+            answer = _conditional_answer(entry.get("answer"), location)
+            return entry.get("status", "needs_review"), answer
+
     resolved = resolve_question(faq_path, question)
     answer = _conditional_answer(resolved.get("answer"), location)
     if resolved["status"] == "approved" and answer is not None:
