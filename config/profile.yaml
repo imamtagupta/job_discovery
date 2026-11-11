@@ -71,8 +71,8 @@ application:
       status: approved
     ambiguous_selection:
       question: "Please select one of the following:"
-      answer: null
-      status: needs_review
+      answer: I am not a Mexican National
+      status: approved
     english_proficiency:
       question: Are you professionally proficient in written and verbal English communication?
       answer: "Yes"
