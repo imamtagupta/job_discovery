@@ -277,8 +277,14 @@ def stage_application(
                     page.wait_for_load_state("domcontentloaded")
                     page.wait_for_timeout(1000)
 
+            form_scope = page
+            for frame in page.frames:
+                if frame.locator('input[type="file"]').count():
+                    form_scope = frame
+                    break
+
             _stage_page(
-                page,
+                form_scope,
                 row=row,
                 profile=profile,
                 faq_path=faq_path,
@@ -287,7 +293,7 @@ def stage_application(
                 result=result,
             )
 
-            submit_controls = page.get_by_role("button", name=FINAL_SUBMIT_PATTERN)
+            submit_controls = form_scope.get_by_role("button", name=FINAL_SUBMIT_PATTERN)
             if result.unresolved_questions:
                 result.status = "needs_input"
             elif submit_controls.count() == 0:
@@ -298,9 +304,9 @@ def stage_application(
             else:
                 submit_controls.first.click()
                 page.wait_for_timeout(2000)
-                confirmation = page.get_by_text(CONFIRMATION_PATTERN)
+                confirmation = form_scope.get_by_text(CONFIRMATION_PATTERN)
                 if confirmation.count() or CONFIRMATION_PATTERN.search(
-                    page.locator("body").inner_text()
+                    form_scope.locator("body").inner_text()
                 ):
                     result.status = "submitted"
                 else:
