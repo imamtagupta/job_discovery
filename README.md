@@ -16,7 +16,8 @@ A production-minded, zero-paid-API job discovery service. It collects directly f
 - Incremental Google Sheets sync with targeted views that preserves application status and notes and neutralizes formula injection
 - Console notifications only for newly discovered high-scoring jobs
 - Daily GitHub Actions schedule at approximately 08:00 IST
-- Daily refresh and validation of public ATS sources before job collection
+- Daily refresh and validation of public ATS sources after job collection, isolated so maintenance
+  failures cannot block fetching from already-verified sources
 - ATS registry discovery from 150 curated company career-page candidates
 - Greenhouse, Lever, Ashby, and modular Workday source detection and validation
 - Resume-verified multi-stage matching with role-family, eligibility, freshness, and priority metrics
@@ -104,6 +105,14 @@ The workflow also creates `application-queue.csv` containing only new, active, e
 scoring at least 80. Queue creation never submits an application; every application remains subject
 to explicit review and approval.
 
+To enable the optional form runner, set the repository Actions variable
+`AUTO_SUBMIT_APPLICATIONS=true` and make the configured resume available to the private workflow as
+`MamtaGupta2026.1.pdf`. The runner processes eligible jobs named in `discovery-report.md` first,
+then the remaining eligible, unapplied rows in `fetched-jobs.csv`. It clicks Submit only when every
+detected required answer is approved. Unknown questions, login prompts, CAPTCHA challenges, and
+unconfirmed submissions remain in the uploaded `application-artifacts` for review. Do not commit a
+resume containing personal information to a public repository.
+
 ## Application question knowledge base
 
 Approved reusable form answers live in `config/application_faq.yaml`. Matching is deliberately
@@ -120,4 +129,23 @@ Implement `Collector.collect()` under `src/job_discovery/collectors`, register t
 ## Accuracy boundaries
 
 `first_seen_at` means first discovered by this service, not posting time. Source timestamps are stored separately when supplied. Salary, sponsorship, and remote eligibility remain unknown unless the listing explicitly provides evidence. No application submission is performed.
+
+### Stage an application in Chromium
+
+Install the optional browser dependency once:
+
+```bash
+python3 -m pip install -e '.[applications]'
+python3 -m playwright install chromium
+```
+
+Then stage the first `ready_for_review` job (or pass `--job-id`):
+
+```bash
+job-discovery stage-application
+```
+
+The command fills approved fields, uploads the configured resume, records unknown questions,
+and writes a screenshot plus JSON report under `application-artifacts/`. It deliberately never
+clicks the final submission button.
 

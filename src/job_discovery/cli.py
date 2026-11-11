@@ -1,10 +1,12 @@
 import asyncio
 import json
 import logging
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
 import typer
+from sqlalchemy import select
 
 from discovery.ats_detector import discover_registry, registry_summary, validate_registry
 
@@ -15,9 +17,16 @@ from .database import (
     make_engine,
     session_factory,
 )
+from .models import Application, Job
 from .pipeline import rescore_jobs, run_discovery, sync_source_definitions
 from .services.application_faq import add_faq_entry, record_unseen_question, resolve_question
 from .services.applications import prepare_application_queue
+from .services.browser_applications import (
+    load_discovered_jobs,
+    load_queue_job,
+    stage_application,
+    write_staging_result,
+)
 from .services.reporting import build_discovery_report, export_jobs_csv
 from .services.sheets import SheetsSync
 from .settings import Settings
@@ -210,6 +219,93 @@ def prepare_applications(
             minimum_score=minimum_score,
         )
     typer.echo(f"Prepared {count} jobs for application review in {output}.")
+
+
+@app.command("stage-application")
+def stage_application_command(
+    job_id: str | None = typer.Option(None, help="Stable job id; defaults to first ready job."),
+    queue: str = typer.Option("application-queue.csv"),
+    resume: str = typer.Option("MamtaGupta2026.1.pdf"),
+    artifacts: str = typer.Option("application-artifacts"),
+    headless: bool = typer.Option(False, help="Run without a visible Chromium window."),
+) -> None:
+    """Fill one reviewed application, capture questions, and stop before submission."""
+    settings, _, _ = context()
+    queue_path = Path(queue)
+    resume_path = Path(resume)
+    if not resume_path.is_file():
+        raise typer.BadParameter(f"Resume not found: {resume_path}", param_hint="resume")
+    try:
+        row = load_queue_job(queue_path, job_id)
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(str(exc), param_hint="queue") from None
+    artifact_dir = Path(artifacts)
+    result = stage_application(
+        row,
+        profile=load_yaml(settings.profile_config),
+        faq_path=settings.application_faq_config,
+        backlog_path=settings.application_question_backlog,
+        resume_path=resume_path,
+        artifact_dir=artifact_dir,
+        headless=headless,
+    )
+    report_path = write_staging_result(result, artifact_dir)
+    typer.echo(json.dumps({**result.__dict__, "report": str(report_path)}, indent=2))
+    if result.status == "failed":
+        raise typer.Exit(code=1)
+
+
+@app.command("apply-from-files")
+def apply_from_files(
+    report: str = typer.Option("discovery-report.md"),
+    jobs: str = typer.Option("fetched-jobs.csv"),
+    resume: str = typer.Option("MamtaGupta2026.1.pdf"),
+    artifacts: str = typer.Option("application-artifacts"),
+    limit: int = typer.Option(25, min=1),
+    submit: bool = typer.Option(False, help="Click Submit only when no answers are unresolved."),
+) -> None:
+    """Process report recommendations first, then remaining eligible fetched jobs."""
+    settings, engine, factory = context()
+    initialize_database(engine)
+    resume_path = Path(resume)
+    if not resume_path.is_file():
+        raise typer.BadParameter(f"Resume not found: {resume_path}", param_hint="resume")
+    try:
+        rows = load_discovered_jobs(Path(report), Path(jobs))[:limit]
+    except OSError as exc:
+        raise typer.BadParameter(str(exc), param_hint="report/jobs") from None
+
+    artifact_dir = Path(artifacts)
+    totals: dict[str, int] = {}
+    profile = load_yaml(settings.profile_config)
+    with factory() as session:
+        for row in rows:
+            result = stage_application(
+                row,
+                profile=profile,
+                faq_path=settings.application_faq_config,
+                backlog_path=settings.application_question_backlog,
+                resume_path=resume_path,
+                artifact_dir=artifact_dir,
+                headless=True,
+                submit=submit,
+            )
+            write_staging_result(result, artifact_dir)
+            totals[result.status] = totals.get(result.status, 0) + 1
+
+            job = session.scalar(select(Job).where(Job.stable_id == row["stable_job_id"]))
+            if job is None:
+                continue
+            application = session.scalar(select(Application).where(Application.job_id == job.id))
+            if application is None:
+                application = Application(job_id=job.id)
+                session.add(application)
+            application.status = result.status
+            application.notes = result.error or "; ".join(result.unresolved_questions)
+            if result.status == "submitted":
+                application.applied_at = datetime.now(UTC)
+            session.commit()
+    typer.echo(json.dumps({"selected": len(rows), "results": totals}, sort_keys=True))
 
 
 @app.command("faq-check")

@@ -22,6 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 postgres = ["psycopg[binary]>=3.2,<4"]
+applications = ["playwright>=1.49,<2"]
 dev = ["pytest>=8,<9", "pytest-asyncio>=0.24,<1", "respx>=0.21,<1", "ruff>=0.7,<1"]
 
 [project.scripts]

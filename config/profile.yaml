@@ -5,6 +5,12 @@ candidate:
   current_employer: JPMorgan Chase & Co.
   current_title: Associate Software Engineer
   resume_verified: true
+application:
+  first_name: Mamta
+  last_name: Gupta
+  email: mamtaguptasde@gmail.com
+  phone: "9082319147"
+  linkedin: null
 excluded_employers:
   - name: JPMorgan Chase & Co.
     aliases: [jpmorgan chase, jp morgan chase, jpmorgan, jpmc, chase]
