@@ -4,19 +4,99 @@ from pathlib import Path
 from job_discovery.services.browser_applications import (
     _browser_profile_key,
     _choice_matches,
+    _is_selectable_prompt_option,
     _requires_nested_choice,
+    _selection_instruction_committed,
+    _workday_multiselect_container,
+    _workday_step,
     answer_for_question,
     load_discovered_jobs,
     load_queue_job,
 )
 
 
+class _TextLocator:
+    def __init__(self, text: str):
+        self.text = text
+
+    def inner_text(self):
+        return self.text
+
+
+class _PageWithBody:
+    def __init__(self, text: str):
+        self.text = text
+
+    def locator(self, selector: str):
+        assert selector == "body"
+        return _TextLocator(self.text)
+
+
+class _CountLocator:
+    def __init__(self, count: int = 1):
+        self._count = count
+
+    def count(self):
+        return self._count
+
+
+class _MultiselectInput:
+    def get_attribute(self, name: str):
+        assert name == "data-uxi-multiselect-id"
+        return "source-widget"
+
+
+class _MultiselectScope:
+    def __init__(self):
+        self.selector = None
+
+    def locator(self, selector: str):
+        self.selector = selector
+        return _CountLocator()
+
+
+class _PromptOption:
+    def __init__(self, *, role: str = "", disabled: str | None = None, inputs: int = 0):
+        self.attributes = {"role": role, "aria-disabled": disabled}
+        self.inputs = inputs
+
+    def get_attribute(self, name: str):
+        return self.attributes.get(name)
+
+    def locator(self, selector: str):
+        return _CountLocator(self.inputs)
+
+
 def test_workday_choice_matching_is_scoped_and_semantic():
     assert _choice_matches("company careers page", "career site")
+    assert _choice_matches("career site", "career site")
     assert _choice_matches("no", "i am not a protected veteran")
     assert not _choice_matches("company careers page", "india 91")
     assert _requires_nested_choice("company careers page")
+    assert _requires_nested_choice("career site")
     assert not _requires_nested_choice("india 91")
+    assert _selection_instruction_committed("1 item selected, Career Site", "Career Site")
+    assert not _selection_instruction_committed("0 items selected", "Career Site")
+
+
+def test_workday_multiselect_is_scoped_by_widget_id():
+    scope = _MultiselectScope()
+    assert _workday_multiselect_container(scope, _MultiselectInput()) is not None
+    assert scope.selector == (
+        '[data-automation-id="multiSelectContainer"][id="source-widget"]'
+    )
+
+
+def test_workday_nested_choice_rejects_heading_with_same_text():
+    assert not _is_selectable_prompt_option(_PromptOption())
+    assert not _is_selectable_prompt_option(_PromptOption(role="option", disabled="true"))
+    assert _is_selectable_prompt_option(_PromptOption(role="option"))
+    assert _is_selectable_prompt_option(_PromptOption(inputs=1))
+
+
+def test_workday_step_reads_progress_state():
+    page = _PageWithBody("completed step 1 of 6 current step 2 of 6 My Information")
+    assert _workday_step(page) == 2
 
 
 def test_browser_profile_key_is_stable_per_employer():

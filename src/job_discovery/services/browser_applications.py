@@ -217,7 +217,57 @@ def _choice_matches(wanted: str, option: str) -> bool:
 
 
 def _requires_nested_choice(wanted: str) -> bool:
-    return wanted in {"company careers page", "company website"}
+    return wanted in {"career site", "company careers page", "company website"}
+
+
+def _selection_instruction_committed(instruction: str, label: str) -> bool:
+    normalized = instruction.strip().casefold()
+    return (
+        not normalized.startswith("0 items selected")
+        and "item selected" in normalized
+        and label.casefold() in normalized
+    )
+
+
+def _is_selectable_prompt_option(option: Any) -> bool:
+    """Reject Workday prompt headings that reuse an option's visible text."""
+    if option.get_attribute("aria-disabled") == "true":
+        return False
+    role = (option.get_attribute("role") or "").casefold()
+    if role in {"option", "radio", "checkbox"}:
+        return True
+    return bool(
+        option.locator(
+            'input[type="radio"], input[type="checkbox"], [role="radio"], [role="option"]'
+        ).count()
+    )
+
+
+def _workday_multiselect_container(scope: Any, locator: Any) -> Any | None:
+    multiselect_id = locator.get_attribute("data-uxi-multiselect-id")
+    if not multiselect_id:
+        return None
+    container = scope.locator(
+        f'[data-automation-id="multiSelectContainer"][id="{multiselect_id}"]'
+    )
+    return container if container.count() else None
+
+
+def _nested_choice_committed(scope: Any, locator: Any, label: str) -> bool:
+    container = _workday_multiselect_container(scope, locator)
+    if container is None:
+        return False
+    instruction = container.locator('[data-automation-id="promptAriaInstruction"]')
+    if instruction.count() and _selection_instruction_committed(
+        instruction.inner_text(), label
+    ):
+        return True
+    selected_items = container.locator('[data-automation-id="selectedItem"]')
+    for index in range(selected_items.count()):
+        selected = selected_items.nth(index)
+        if label.casefold() in (selected.get_attribute("aria-label") or "").casefold():
+            return True
+    return False
 
 
 def _scoped_options(scope: Any, locator: Any) -> Any:
@@ -230,7 +280,15 @@ def _scoped_options(scope: Any, locator: Any) -> Any:
 
 
 def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
-    locator.click()
+    workday_container = _workday_multiselect_container(scope, locator)
+    if workday_container is not None:
+        prompt_icon = workday_container.locator('[data-automation-id="promptIcon"]')
+        if not prompt_icon.count():
+            return False
+        prompt_icon.click()
+    else:
+        locator.click()
+    scope.wait_for_timeout(300)
     # Greenhouse location fields populate their listbox only after typing.
     # Ordinary select-like controls reject fill(), so retaining the opened list
     # is a safe fallback for those controls.
@@ -244,7 +302,10 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
             filled_editable = locator.input_value().strip() == str(answer).strip()
     except Exception:
         pass
-    options = _scoped_options(scope, locator)
+    if workday_container is not None:
+        options = scope.locator('[data-automation-id="promptOption"]')
+    else:
+        options = _scoped_options(scope, locator)
     wanted = _normalized_choice(answer)
     fallback = None
     for index in range(options.count()):
@@ -262,10 +323,22 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
                 nested_selected = False
                 for nested_index in range(nested_rows.count() - 1, -1, -1):
                     nested_row = nested_rows.nth(nested_index)
-                    if nested_row.is_visible():
+                    if nested_row.is_visible() and _is_selectable_prompt_option(nested_row):
                         nested_row.click()
                         nested_selected = True
                         break
+                if not nested_selected:
+                    visible_career_rows = scope.locator(
+                        '[data-automation-id="promptOption"]'
+                    ).filter(has_text=re.compile(r"^Career Site$", re.I))
+                    for nested_index in range(
+                        visible_career_rows.count() - 1, -1, -1
+                    ):
+                        nested_row = visible_career_rows.nth(nested_index)
+                        if nested_row.is_visible() and _is_selectable_prompt_option(nested_row):
+                            nested_row.click()
+                            nested_selected = True
+                            break
                 if not nested_selected:
                     nested_radio = scope.get_by_role(
                         "radio", name="Career Site", exact=True
@@ -284,7 +357,9 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
                         nested_selected = True
                 if not nested_selected:
                     return False
-                scope.wait_for_timeout(300)
+                scope.wait_for_timeout(500)
+                if not _nested_choice_committed(scope, locator, "Career Site"):
+                    return False
             return True
         if fallback is None and (
             normalized.startswith(wanted) or wanted.startswith(normalized)
@@ -431,6 +506,34 @@ def _enter_application(
     return True
 
 
+def _workday_step(page: Any) -> int | None:
+    match = re.search(r"current step\s+(\d+)\s+of\s+\d+", page.locator("body").inner_text(), re.I)
+    return int(match.group(1)) if match else None
+
+
+def _workday_validation_messages(page: Any) -> list[str]:
+    body = page.locator("body").inner_text()
+    if "Errors Found" not in body:
+        return []
+    messages: list[str] = []
+    candidates = page.locator(
+        '[data-automation-id="errorMessage"], [id$="-error"], '
+        'a:has-text("Error-"), a:has-text("Error -")'
+    )
+    for index in range(candidates.count()):
+        candidate = candidates.nth(index)
+        if candidate.is_visible():
+            message = candidate.inner_text().strip()
+            if message and message not in messages:
+                messages.append(message)
+    if not messages:
+        for label in re.findall(r"Error\s*-\s*([^\n]+)", body, re.I):
+            message = label.strip()
+            if message and message not in messages:
+                messages.append(message)
+    return messages or ["Workday rejected the current step; see the saved screenshot"]
+
+
 def _stage_page(
     page: Any,
     *,
@@ -465,9 +568,13 @@ def _stage_page(
             locator.check()
             result.filled_fields.append(question)
 
-    previous_worker = page.locator('input[name="candidateIsPreviousWorker"][value="false"]')
+    previous_worker = page.locator(
+        'input[type="radio"][name*="previousWorker" i][value="false"], '
+        'input[type="radio"][name*="previousWorker" i][value="No" i]'
+    )
     if previous_worker.count() and not previous_worker.is_checked():
         previous_worker.check(force=True)
+    if previous_worker.count() and previous_worker.is_checked():
         result.filled_fields.append("Previously worked for this organization: No")
 
     comboboxes = page.get_by_role("combobox")
@@ -497,8 +604,6 @@ def _stage_page(
         locator = fields.nth(index)
         try:
             if not locator.is_visible() or not locator.is_enabled():
-                continue
-            if "requiredInput" in (locator.get_attribute("class") or ""):
                 continue
             if locator.get_attribute("role") == "combobox":
                 continue
@@ -638,8 +743,24 @@ def stage_application(
                     next_text = next_button.inner_text().strip().casefold()
                     if "submit" in next_text:
                         break
+                    previous_step = _workday_step(page)
                     next_button.click()
                     page.wait_for_timeout(4_000)
+                    current_step = _workday_step(page)
+                    if (
+                        previous_step is not None
+                        and current_step is not None
+                        and current_step == previous_step
+                    ):
+                        messages = _workday_validation_messages(page)
+                        if messages:
+                            result.status = "failed_validation"
+                            result.unresolved_questions.extend(
+                                message
+                                for message in messages
+                                if message not in result.unresolved_questions
+                            )
+                            break
                     validation_errors = form_scope.locator(
                         '[role="alert"], [data-automation-id="errorMessage"]'
                     )
@@ -660,6 +781,8 @@ def stage_application(
 
             submit_controls = form_scope.get_by_role("button", name=FINAL_SUBMIT_PATTERN)
             if not entered_application:
+                pass
+            elif result.status == "failed_validation":
                 pass
             elif result.unresolved_questions:
                 result.status = "needs_input"

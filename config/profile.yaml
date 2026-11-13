@@ -141,7 +141,7 @@ application:
     job_source:
       question: How did you hear about this job?
       aliases: ["How did you learn about this job?", "How Did You Hear About Us?"]
-      answer: Company careers page
+      answer: Career Site
       status: approved
     country_phone_code:
       question: Country Phone Code
