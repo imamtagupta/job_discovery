@@ -265,9 +265,18 @@ def apply_from_files(
     include_needs_review: bool = typer.Option(
         False, help="Also process report jobs whose eligibility still needs review."
     ),
+    retry_incomplete: bool = typer.Option(
+        False, help="Retry incomplete statuses, but never jobs already confirmed submitted."
+    ),
     job_id: Annotated[
         list[str] | None, typer.Option(help="Only process these stable job ids.")
     ] = None,
+    verification_code: str | None = typer.Option(
+        None, help="One-time application verification code; never persisted."
+    ),
+    interactive_verification: bool = typer.Option(
+        False, help="Pause for a fresh verification code without closing the browser."
+    ),
     submit: bool = typer.Option(False, help="Click Submit only when no answers are unresolved."),
 ) -> None:
     """Process report recommendations first, then remaining eligible fetched jobs."""
@@ -278,7 +287,10 @@ def apply_from_files(
         raise typer.BadParameter(f"Resume not found: {resume_path}", param_hint="resume")
     try:
         rows = load_discovered_jobs(
-            Path(report), Path(jobs), include_needs_review=include_needs_review
+            Path(report),
+            Path(jobs),
+            include_needs_review=include_needs_review,
+            retry_incomplete=retry_incomplete,
         )
         if job_id:
             requested = set(job_id)
@@ -301,6 +313,8 @@ def apply_from_files(
                 artifact_dir=artifact_dir,
                 headless=True,
                 submit=submit,
+                verification_code=verification_code,
+                interactive_verification=interactive_verification,
             )
             write_staging_result(result, artifact_dir)
             totals[result.status] = totals.get(result.status, 0) + 1

@@ -24,9 +24,12 @@ entries:
     status: approved
   - key: notice_period
     question: What is your notice period?
-    aliases: ["How soon can you join?", Earliest start date]
-    answer: null
-    status: needs_review
+    aliases:
+      - How soon can you join?
+      - Earliest start date
+      - What is your current notice period with your employer?
+    answer: 60 days
+    status: approved
   - key: work_authorization
     question: Are you legally authorized to work in this job's country?
     aliases: ["Are you authorized to work in this location?"]
@@ -39,6 +42,8 @@ entries:
     aliases:
       - Do you require employment sponsorship?
       - Will you now or in the future require employment sponsorship?
+      - Do you require a visa / sponsorship for this job location?
+      - Do you required a visa / sponsorship for this job location?
     answer:
       india: "No"
       outside_india: "Yes"

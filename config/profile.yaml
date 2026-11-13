@@ -3,7 +3,7 @@ candidate:
   location: Mumbai, India
   years_experience: 6
   current_employer: JPMorgan Chase & Co.
-  current_title: Associate Software Engineer
+  current_title: SDE 2
   resume_verified: true
 application:
   first_name: Mamta
@@ -12,8 +12,106 @@ application:
   email: mamtaguptasde@gmail.com
   phone: "9082319147"
   country: India
-  linkedin: null
+  passport_country: India
+  residence_country: India
+  pronouns: She/her
+  github: https://github.com/imamtagupta
+  linkedin: https://www.linkedin.com/in/mamtaguptasde/
   answers:
+    full_name:
+      question: First and Last Name
+      aliases: [Full name, Legal name]
+      answer: Mamta Gupta
+      status: approved
+    pronouns:
+      question: Pronouns
+      answer: She/her
+      status: approved
+    passport_country:
+      question: Passport Country
+      answer: India
+      status: approved
+    residence_country:
+      question: Country of Residence
+      answer: India
+      status: approved
+    github_profile:
+      question: Github Profile
+      aliases: [GitHub URL, GitHub profile]
+      answer: https://github.com/imamtagupta
+      status: approved
+    remote_async_experience:
+      question: Tell us about your experience working in an async and/or remote environment. What practices or approaches have worked well for you? What challenges have you faced?
+      answer: I have 2 years of remote-work experience, collaborating asynchronously through clear written communication, documented decisions, and regular team coordination.
+      status: approved
+    figma_motivation:
+      question: Why do you want to join Figma?
+      answer: I am motivated by the opportunity to create something new.
+      status: approved
+    intended_work_country:
+      question: From where do you intend to work?
+      answer: India
+      status: approved
+    figma_work_authorization:
+      question: Are you authorized to work in the country for which you applied?
+      answer: "Yes"
+      status: approved
+    prior_figma_work:
+      question: Have you ever worked for Figma before, as an employee or a contractor/consultant?
+      answer: "No"
+      status: approved
+    relevant_experience_years:
+      question: How many years of professional experience do you have in this type of role (excluding internships)?
+      answer: "6"
+      status: approved
+    professional_software_engineering:
+      question: Have you worked as a full-time software engineer in a professional setting (excluding internships)?
+      answer: "Yes"
+      status: approved
+    current_company_form:
+      question: Company name
+      answer: JPMC
+      status: approved
+    current_title_form:
+      question: Title
+      answer: SDE 2
+      status: approved
+    current_company_industry:
+      question: Current Company
+      answer: Banking
+      status: approved
+    current_designation_level:
+      question: Current Designation
+      answer: Experienced Professional
+      status: approved
+    employment_start_month:
+      question: Start date month
+      answer: January
+      status: approved
+    employment_start_year:
+      question: Start date year
+      answer: "2024"
+      status: approved
+    current_role:
+      question: Current role
+      answer: "Yes"
+      status: approved
+    employment_end_month:
+      question: End date month
+      answer: January
+      status: approved
+    employment_end_year:
+      question: End date year
+      answer: "2027"
+      status: approved
+    expected_salary_india:
+      question: Expected salary in India
+      answer: 40 LPA INR
+      status: approved
+    expected_salary_myr_monthly:
+      question: What are your monthly salary expectations in MYR, including any allowances or bonuses (if applicable)?
+      answer: "15000"
+      status: approved
     job_source:
       question: How did you hear about this job?
       aliases: ["How did you learn about this job?"]

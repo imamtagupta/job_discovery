@@ -133,6 +133,22 @@ def test_load_discovered_jobs_prioritizes_report_and_filters_ineligible(tmp_path
                     "match_score": "90",
                     "direct_apply_url": "https://example.com/review",
                 },
+                {
+                    "stable_job_id": "attempted",
+                    "eligibility_status": "eligible",
+                    "application_status": "submission_attempted",
+                    "application_priority": "70",
+                    "match_score": "70",
+                    "direct_apply_url": "https://example.com/attempted",
+                },
+                {
+                    "stable_job_id": "submitted",
+                    "eligibility_status": "eligible",
+                    "application_status": "submitted",
+                    "application_priority": "100",
+                    "match_score": "100",
+                    "direct_apply_url": "https://example.com/submitted",
+                },
             ]
         )
 
@@ -144,3 +160,9 @@ def test_load_discovered_jobs_prioritizes_report_and_filters_ineligible(tmp_path
         row["stable_job_id"]
         for row in load_discovered_jobs(report, jobs, include_needs_review=True)
     ] == ["recommended", "remaining", "review"]
+    assert [
+        row["stable_job_id"]
+        for row in load_discovered_jobs(
+            report, jobs, include_needs_review=True, retry_incomplete=True
+        )
+    ] == ["recommended", "remaining", "review", "attempted"]

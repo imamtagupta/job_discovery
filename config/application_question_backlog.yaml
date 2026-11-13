@@ -1,1 +1,314 @@
-questions: []
+questions:
+- question: Attach
+  normalized: attach
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:35.629760+00:00'
+- question: Country*
+  normalized: country
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:36.394878+00:00'
+- question: Unlabelled application field
+  normalized: unlabelled application field
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:36.524218+00:00'
+- question: Location (City)*
+  normalized: location city
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:36.702171+00:00'
+- question: Preferred Name*
+  normalized: preferred name
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:36.920037+00:00'
+- question: Website
+  normalized: website
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.127557+00:00'
+- question: LinkedIn Profile
+  normalized: linkedin profile
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.327528+00:00'
+- question: Would you like to stay up to date with MongoDB Culture and Careers content?
+  normalized: would you like to stay up to date with mongodb culture and careers content
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.430003+00:00'
+- question: How did you learn about this job?
+  normalized: how did you learn about this job
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.577177+00:00'
+- question: 'If you answered MongoDB Employee, MongoDB Event, or Other, please specify
+    here:'
+  normalized: if you answered mongodb employee mongodb event or other please specify
+    here
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.663146+00:00'
+- question: Receive alerts for similar jobs?
+  normalized: receive alerts for similar jobs
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.686518+00:00'
+- question: Will you now or in the future require employment sponsorship?*
+  normalized: will you now or in the future require employment sponsorship
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.712390+00:00'
+- question: Have you ever worked at MongoDB before?*
+  normalized: have you ever worked at mongodb before
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.765853+00:00'
+- question: Gender Identity (Select one)*
+  normalized: gender identity select one
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.816382+00:00'
+- question: By checking this box, I consent to MongoDB collecting, storing, and processing
+    my responses to the demographic data surveys above.*
+  normalized: by checking this box i consent to mongodb collecting storing and processing
+    my responses to the demographic data surveys above
+  source: https://www.mongodb.com/careers/job/?gh_jid=8143980
+  status: unresolved
+  first_seen_at: '2026-11-11T18:34:37.869365+00:00'
+- question: Gender*
+  normalized: gender
+  source: https://www.mongodb.com/careers/job/?gh_jid=7668289
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:26.525623+00:00'
+- question: Race*
+  normalized: race
+  source: https://www.mongodb.com/careers/job/?gh_jid=7668289
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:26.591046+00:00'
+- question: Are you Hispanic/Latino?*
+  normalized: are you hispanic latino
+  source: https://www.mongodb.com/careers/job/?gh_jid=7668289
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:26.627324+00:00'
+- question: Veteran Status*
+  normalized: veteran status
+  source: https://www.mongodb.com/careers/job/?gh_jid=7668289
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:26.666496+00:00'
+- question: Disability Status*
+  normalized: disability status
+  source: https://www.mongodb.com/careers/job/?gh_jid=7668289
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:26.704156+00:00'
+- question: Do you require relocation assistance for the role to which you are applying
+    to? *
+  normalized: do you require relocation assistance for the role to which you are applying
+    to
+  source: https://www.mongodb.com/careers/job/?gh_jid=8211994
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:50.424184+00:00'
+- question: Please select one of the following:*
+  normalized: please select one of the following
+  source: https://www.mongodb.com/careers/job/?gh_jid=8211994
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:50.504933+00:00'
+- question: Are you professionally proficient in written and verbal English communication?*
+  normalized: are you professionally proficient in written and verbal english communication
+  source: https://www.mongodb.com/careers/job/?gh_jid=8211994
+  status: unresolved
+  first_seen_at: '2026-11-11T18:47:50.537867+00:00'
+- question: How did you hear about this job?*
+  normalized: how did you hear about this job
+  source: https://boards.greenhouse.io/cloudflare/jobs/8317751?gh_jid=8317751
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:46.706578+00:00'
+- question: Do you currently live or are you willing to relocate to the job’s location?*
+  normalized: do you currently live or are you willing to relocate to the job s location
+  source: https://boards.greenhouse.io/cloudflare/jobs/8317751?gh_jid=8317751
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:46.745027+00:00'
+- question: Do you now or will you in the future require immigration sponsorship to
+    work at Cloudflare in Singapore?*
+  normalized: do you now or will you in the future require immigration sponsorship
+    to work at cloudflare in singapore
+  source: https://boards.greenhouse.io/cloudflare/jobs/8317751?gh_jid=8317751
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:46.787646+00:00'
+- question: Acknowledge/Confirm
+  normalized: acknowledge confirm
+  source: https://boards.greenhouse.io/cloudflare/jobs/8317751?gh_jid=8317751
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:46.899512+00:00'
+- question: Are you currently based or willing to relocate to the job location? *
+  normalized: are you currently based or willing to relocate to the job location
+  source: https://boards.greenhouse.io/cloudflare/jobs/8018536?gh_jid=8018536
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:51.719384+00:00'
+- question: Where are you based? *
+  normalized: where are you based
+  source: https://boards.greenhouse.io/cloudflare/jobs/8018536?gh_jid=8018536
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:51.814130+00:00'
+- question: Do you now or will you in the future require immigration sponsorship to
+    work at Cloudflare?*
+  normalized: do you now or will you in the future require immigration sponsorship
+    to work at cloudflare
+  source: https://boards.greenhouse.io/cloudflare/jobs/8018536?gh_jid=8018536
+  status: unresolved
+  first_seen_at: '2026-11-11T18:48:51.859838+00:00'
+- question: On a scale of 1–10, how would you rate your proficiency in Go? (1 = beginner;
+    10 = expert)*
+  normalized: on a scale of 1 10 how would you rate your proficiency in go 1 beginner
+    10 expert
+  source: https://boards.greenhouse.io/cloudflare/jobs/8338018?gh_jid=8338018
+  status: unresolved
+  first_seen_at: '2026-11-11T18:49:05.674014+00:00'
+- question: In 1–2 sentences, describe your experience developing Terraform providers
+    and/or using Terraform to manage infrastructure.*
+  normalized: in 1 2 sentences describe your experience developing terraform providers
+    and or using terraform to manage infrastructure
+  source: https://boards.greenhouse.io/cloudflare/jobs/8338018?gh_jid=8338018
+  status: unresolved
+  first_seen_at: '2026-11-11T18:49:05.730212+00:00'
+- question: Legal Name (if different than above)*
+  normalized: legal name if different than above
+  source: https://boards.greenhouse.io/cloudflare/jobs/7558153?gh_jid=7558153
+  status: unresolved
+  first_seen_at: '2026-11-11T18:49:10.102953+00:00'
+- question: This role is based in Austin. Are you currently located in one of the
+    hub locations or willing to relocate?*
+  normalized: this role is based in austin are you currently located in one of the
+    hub locations or willing to relocate
+  source: https://boards.greenhouse.io/cloudflare/jobs/7558153?gh_jid=7558153
+  status: unresolved
+  first_seen_at: '2026-11-11T18:49:10.348208+00:00'
+- question: Please indicate your current city, state, and country.*
+  normalized: please indicate your current city state and country
+  source: https://boards.greenhouse.io/cloudflare/jobs/7558153?gh_jid=7558153
+  status: unresolved
+  first_seen_at: '2026-11-11T18:49:10.445173+00:00'
+- question: First and Last Name
+  normalized: first and last name
+  source: https://jobs.ashbyhq.com/sentry/ccbee884-5fc1-492e-ba18-df568587ccc2
+  status: unresolved
+  first_seen_at: '2026-11-11T19:15:31.819813+00:00'
+- question: Pronouns
+  normalized: pronouns
+  source: https://jobs.ashbyhq.com/sentry/ccbee884-5fc1-492e-ba18-df568587ccc2
+  status: unresolved
+  first_seen_at: '2026-11-11T19:15:32.114718+00:00'
+- question: Passport Country
+  normalized: passport country
+  source: https://jobs.ashbyhq.com/supabase/9f2ba0b2-6d3b-43ea-990f-5b4bf3930520
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:29.322065+00:00'
+- question: Country of Residence
+  normalized: country of residence
+  source: https://jobs.ashbyhq.com/supabase/9f2ba0b2-6d3b-43ea-990f-5b4bf3930520
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:29.438007+00:00'
+- question: Github Profile
+  normalized: github profile
+  source: https://jobs.ashbyhq.com/supabase/9f2ba0b2-6d3b-43ea-990f-5b4bf3930520
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:29.648943+00:00'
+- question: Linkedin
+  normalized: linkedin
+  source: https://jobs.ashbyhq.com/supabase/9f2ba0b2-6d3b-43ea-990f-5b4bf3930520
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:29.688336+00:00'
+- question: Tell us about your experience working in an async and/or remote environment.
+    What practices or approaches have worked well for you? What challenges have you
+    faced?
+  normalized: tell us about your experience working in an async and or remote environment
+    what practices or approaches have worked well for you what challenges have you
+    faced
+  source: https://jobs.ashbyhq.com/supabase/9f2ba0b2-6d3b-43ea-990f-5b4bf3930520
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:29.730041+00:00'
+- question: Why do you want to join Figma?*
+  normalized: why do you want to join figma
+  source: https://boards.greenhouse.io/figma/jobs/5790627004?gh_jid=5790627004
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:33.637010+00:00'
+- question: From where do you intend to work? *
+  normalized: from where do you intend to work
+  source: https://boards.greenhouse.io/figma/jobs/5790627004?gh_jid=5790627004
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:33.740279+00:00'
+- question: Are you authorized to work in the country for which you applied? *
+  normalized: are you authorized to work in the country for which you applied
+  source: https://boards.greenhouse.io/figma/jobs/5790627004?gh_jid=5790627004
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:33.811612+00:00'
+- question: Have you ever worked for Figma before, as an employee or a contractor/consultant?
+    *
+  normalized: have you ever worked for figma before as an employee or a contractor
+    consultant
+  source: https://boards.greenhouse.io/figma/jobs/5790627004?gh_jid=5790627004
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:33.867200+00:00'
+- question: How many years of professional experience do you have in this type of
+    role (excluding internships)?*
+  normalized: how many years of professional experience do you have in this type of
+    role excluding internships
+  source: https://boards.greenhouse.io/figma/jobs/5790627004?gh_jid=5790627004
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:33.924923+00:00'
+- question: Have you worked as a full-time software engineer in a professional setting
+    (excluding internships)?*
+  normalized: have you worked as a full time software engineer in a professional setting
+    excluding internships
+  source: https://boards.greenhouse.io/figma/jobs/5790627004?gh_jid=5790627004
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:33.981832+00:00'
+- question: Company name*
+  normalized: company name
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.027069+00:00'
+- question: Title*
+  normalized: title
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.080318+00:00'
+- question: Start date month*
+  normalized: start date month
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.172525+00:00'
+- question: Start date year*
+  normalized: start date year
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.231998+00:00'
+- question: End date month*
+  normalized: end date month
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.286038+00:00'
+- question: End date year*
+  normalized: end date year
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.345221+00:00'
+- question: Do you required a visa / sponsorship for this job location? *
+  normalized: do you required a visa sponsorship for this job location
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.543705+00:00'
+- question: What is your current notice period with your employer?*
+  normalized: what is your current notice period with your employer
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.603364+00:00'
+- question: What are your monthly salary expectations in MYR, including any allowances
+    or bonuses (if applicable)? *
+  normalized: what are your monthly salary expectations in myr including any allowances
+    or bonuses if applicable
+  source: https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005
+  status: unresolved
+  first_seen_at: '2026-11-11T19:16:46.663523+00:00'

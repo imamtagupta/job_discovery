@@ -49,6 +49,7 @@ def load_discovered_jobs(
     jobs_path: Path,
     *,
     include_needs_review: bool = False,
+    retry_incomplete: bool = False,
 ) -> list[dict[str, str]]:
     """Return eligible, unapplied CSV jobs with report recommendations first."""
     report = report_path.read_text(encoding="utf-8")
@@ -58,11 +59,22 @@ def load_discovered_jobs(
         rows = list(csv.DictReader(handle))
 
     allowed_eligibility = {"eligible", "needs_review"} if include_needs_review else {"eligible"}
+    allowed_statuses = {"", "not_applied", "ready_for_review"}
+    if retry_incomplete:
+        allowed_statuses.update(
+            {
+                "needs_input",
+                "staged_for_review",
+                "submission_attempted",
+                "failed_validation",
+                "failed",
+            }
+        )
     candidates = [
         row
         for row in rows
         if row.get("eligibility_status") in allowed_eligibility
-        and row.get("application_status", "not_applied") in {"", "not_applied", "ready_for_review"}
+        and row.get("application_status", "not_applied") in allowed_statuses
         and row.get("direct_apply_url")
     ]
     return sorted(
@@ -99,10 +111,15 @@ def answer_for_question(
         (("first name", "given name"), application.get("first_name")),
         (("last name", "family name", "surname"), application.get("last_name")),
         (("full name", "name"), candidate.get("name")),
+        (("first and last name", "legal name"), candidate.get("name")),
         (("preferred name",), application.get("preferred_name")),
         (("email", "email address"), application.get("email")),
         (("phone", "phone number", "mobile", "mobile number"), application.get("phone")),
         (("linkedin", "linkedin profile"), application.get("linkedin")),
+        (("github", "github url", "github profile"), application.get("github")),
+        (("pronouns",), application.get("pronouns")),
+        (("passport country",), application.get("passport_country")),
+        (("country of residence",), application.get("residence_country")),
         (("country",), application.get("country")),
         (("current location", "location", "location city", "city"), candidate.get("location")),
     ]
@@ -169,6 +186,31 @@ def _choose_option(locator: Any, answer: Any) -> bool:
     return False
 
 
+def _normalized_choice(value: Any) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", str(value).casefold()))
+
+
+def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
+    locator.click()
+    options = scope.get_by_role("option")
+    wanted = _normalized_choice(answer)
+    fallback = None
+    for index in range(options.count()):
+        option = options.nth(index)
+        label = option.inner_text().strip()
+        normalized = _normalized_choice(label)
+        if normalized == wanted:
+            option.click()
+            return True
+        if normalized.startswith(wanted) or wanted.startswith(normalized):
+            fallback = option
+    if fallback is not None:
+        fallback.click()
+        return True
+    locator.press("Escape")
+    return False
+
+
 def _stage_page(
     page: Any,
     *,
@@ -186,14 +228,54 @@ def _stage_page(
         resume_input.set_input_files(str(resume_path.resolve()))
         result.filled_fields.append("Resume/CV")
 
-    fields = page.locator("input:not([type=hidden]):not([type=file]), textarea, select")
     seen_questions: set[str] = set()
+    checkboxes = page.locator('input[type="checkbox"]')
+    for index in range(checkboxes.count()):
+        locator = checkboxes.nth(index)
+        if not locator.is_visible() or not locator.is_enabled() or locator.is_checked():
+            continue
+        question = _field_question(locator)
+        status, answer = answer_for_question(
+            question,
+            profile=profile,
+            faq_path=faq_path,
+            location=row.get("location", ""),
+        )
+        if status == "approved" and str(answer).casefold() in {"yes", "true", "1"}:
+            locator.check()
+            result.filled_fields.append(question)
+
+    comboboxes = page.get_by_role("combobox")
+    for index in range(comboboxes.count()):
+        locator = comboboxes.nth(index)
+        if not locator.is_visible() or not locator.is_enabled():
+            continue
+        question = _field_question(locator)
+        status, answer = answer_for_question(
+            question,
+            profile=profile,
+            faq_path=faq_path,
+            location=row.get("location", ""),
+        )
+        if status == "approved" and answer is not None:
+            if _choose_combobox_option(page, locator, answer):
+                result.filled_fields.append(question)
+                continue
+        is_required = locator.get_attribute("aria-required") == "true" or "*" in question
+        if is_required and question not in seen_questions:
+            seen_questions.add(question)
+            result.unresolved_questions.append(question)
+            record_unseen_question(backlog_path, question, row.get("direct_apply_url"))
+
+    fields = page.locator("input:not([type=hidden]):not([type=file]), textarea, select")
     for index in range(fields.count()):
         locator = fields.nth(index)
         try:
             if not locator.is_visible() or not locator.is_enabled():
                 continue
             if "requiredInput" in (locator.get_attribute("class") or ""):
+                continue
+            if locator.get_attribute("role") == "combobox":
                 continue
             field_type = (
                 locator.get_attribute("type") or locator.evaluate("el => el.tagName")
@@ -266,6 +348,8 @@ def stage_application(
     artifact_dir: Path,
     headless: bool = False,
     submit: bool = False,
+    verification_code: str | None = None,
+    interactive_verification: bool = False,
     timeout_ms: int = 30_000,
 ) -> StagingResult:
     try:
@@ -333,17 +417,43 @@ def stage_application(
                 result.status = "staged_for_review"
             else:
                 submit_controls.first.click()
-                page.wait_for_timeout(2000)
+                page.wait_for_timeout(5000)
+                code_inputs = form_scope.locator('input[maxlength="1"]')
+                current_code = verification_code
+                if interactive_verification and code_inputs.count() and not current_code:
+                    current_code = input("Verification code: ").strip()
+                if current_code and code_inputs.count() == len(current_code):
+                    for index, character in enumerate(current_code):
+                        code_inputs.nth(index).fill(character)
+                    result.filled_fields.append("Email verification code")
+                    submit_controls.first.click()
+                    page.wait_for_timeout(5000)
                 confirmation = form_scope.get_by_text(CONFIRMATION_PATTERN)
-                if confirmation.count() or CONFIRMATION_PATTERN.search(
-                    form_scope.locator("body").inner_text()
+                if (
+                    "/confirmation" in page.url
+                    or confirmation.count()
+                    or CONFIRMATION_PATTERN.search(form_scope.locator("body").inner_text())
                 ):
                     result.status = "submitted"
                 else:
-                    result.status = "submission_attempted"
-                    result.skipped_fields.append(
-                        "Submit was clicked but no application confirmation was detected"
+                    validation_errors = form_scope.locator(
+                        '[role="alert"], [id$="-error"], .field-error'
                     )
+                    messages = []
+                    for index in range(validation_errors.count()):
+                        error = validation_errors.nth(index)
+                        if error.is_visible():
+                            message = error.inner_text().strip()
+                            if message and message not in messages:
+                                messages.append(message)
+                    if messages:
+                        result.status = "failed_validation"
+                        result.unresolved_questions.extend(messages)
+                    else:
+                        result.status = "submission_attempted"
+                        result.skipped_fields.append(
+                            "Submit was clicked but no application confirmation was detected"
+                        )
             result.final_url = page.url
             page.screenshot(path=str(screenshot_path), full_page=True)
             result.screenshot = str(screenshot_path)
