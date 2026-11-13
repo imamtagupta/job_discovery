@@ -255,12 +255,36 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
             option.click()
             if _requires_nested_choice(wanted):
                 scope.wait_for_timeout(500)
-                nested_options = _scoped_options(scope, locator)
-                for nested_index in range(nested_options.count()):
-                    nested = nested_options.nth(nested_index)
-                    if _normalized_choice(nested.inner_text()) == "career site":
-                        nested.click()
+                nested_rows = scope.locator(
+                    '[data-automation-id="promptOption"]'
+                    '[data-automation-label="Career Site"]'
+                )
+                nested_selected = False
+                for nested_index in range(nested_rows.count() - 1, -1, -1):
+                    nested_row = nested_rows.nth(nested_index)
+                    if nested_row.is_visible():
+                        nested_row.click()
+                        nested_selected = True
                         break
+                if not nested_selected:
+                    nested_radio = scope.get_by_role(
+                        "radio", name="Career Site", exact=True
+                    )
+                    if nested_radio.count():
+                        nested_radio.last.check(force=True)
+                        nested_selected = True
+                if not nested_selected:
+                    nested_label = scope.get_by_label("Career Site", exact=True)
+                    radio_labels = nested_label.locator('input[type="radio"]')
+                    if radio_labels.count():
+                        radio_labels.last.check(force=True)
+                        nested_selected = True
+                    elif nested_label.count():
+                        nested_label.last.click()
+                        nested_selected = True
+                if not nested_selected:
+                    return False
+                scope.wait_for_timeout(300)
             return True
         if fallback is None and (
             normalized.startswith(wanted) or wanted.startswith(normalized)
