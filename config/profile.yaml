@@ -17,11 +17,37 @@ application:
   pronouns: She/her
   github: https://github.com/imamtagupta
   linkedin: https://www.linkedin.com/in/mamtaguptasde/
+  address_line_1: 602, GP BUilding, Omkar SRA Street/Road
+  full_address: 602, GP BUilding, Omkar SRA Street/Road, 400097
+  postal_code: "400097"
   answers:
+    address_line_1:
+      question: Address Line 1
+      aliases: [Street Address, Address]
+      answer: 602, GP BUilding, Omkar SRA Street/Road
+      status: approved
+    full_address:
+      question: Full Address
+      aliases: [Complete Address, Mailing Address]
+      answer: 602, GP BUilding, Omkar SRA Street/Road, 400097
+      status: approved
+    postal_code:
+      question: Postal Code
+      aliases: [ZIP Code, ZIP/Postal Code, PIN Code]
+      answer: "400097"
+      status: approved
     full_name:
       question: First and Last Name
-      aliases: [Full name, Legal name]
+      aliases: [Full name, Legal name, Candidate name, Applicant name]
       answer: Mamta Gupta
+      status: approved
+    local_given_name:
+      question: Local Given Name(s)
+      answer: Mamta
+      status: approved
+    local_family_name:
+      question: Local Family Name
+      answer: Gupta
       status: approved
     pronouns:
       question: Pronouns
@@ -114,15 +140,20 @@ application:
       status: approved
     job_source:
       question: How did you hear about this job?
-      aliases: ["How did you learn about this job?"]
+      aliases: ["How did you learn about this job?", "How Did You Hear About Us?"]
       answer: Company careers page
+      status: approved
+    country_phone_code:
+      question: Country Phone Code
+      aliases: [Phone Country Code]
+      answer: India (+91)
       status: approved
     relocation_to_job_location:
       question: Do you currently live or are you willing to relocate to the job’s location?
       aliases:
         - Are you currently based or willing to relocate to the job location?
         - This role is based in Austin. Are you currently located in one of the hub locations or willing to relocate?
-      answer: "Yes"
+      answer: I am willing to relocate to this job's location.
       status: approved
     current_base:
       question: Where are you based?

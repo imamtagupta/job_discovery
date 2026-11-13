@@ -1,6 +1,7 @@
 import csv
 import json
 import re
+import subprocess
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -12,6 +13,9 @@ FINAL_SUBMIT_PATTERN = re.compile(
     r"^(submit( application)?|send application|complete application)$", re.IGNORECASE
 )
 APPLY_PATTERN = re.compile(r"^(apply|apply now|apply for this job)$", re.IGNORECASE)
+START_APPLICATION_PATTERN = re.compile(
+    r"^(autofill with resume|apply manually|start application)$", re.IGNORECASE
+)
 CONFIRMATION_PATTERN = re.compile(
     r"(application (has been )?(submitted|received)|thank you for applying)", re.IGNORECASE
 )
@@ -107,12 +111,16 @@ def answer_for_question(
     normalized = " ".join(re.findall(r"[a-z0-9]+", question.casefold()))
     candidate = profile.get("candidate", {})
     application = profile.get("application", {})
+    city = str(candidate.get("location") or "").split(",", 1)[0].strip()
     direct_answers = [
-        (("first name", "given name"), application.get("first_name")),
-        (("last name", "family name", "surname"), application.get("last_name")),
+        (("first name", "given name", "given name s"), application.get("first_name")),
+        (
+            ("last name", "family name", "surname", "local family name"),
+            application.get("last_name"),
+        ),
         (("full name", "name"), candidate.get("name")),
         (("first and last name", "legal name"), candidate.get("name")),
-        (("preferred name",), application.get("preferred_name")),
+        (("preferred name", "local given name s"), application.get("preferred_name")),
         (("email", "email address"), application.get("email")),
         (("phone", "phone number", "mobile", "mobile number"), application.get("phone")),
         (("linkedin", "linkedin profile"), application.get("linkedin")),
@@ -121,7 +129,8 @@ def answer_for_question(
         (("passport country",), application.get("passport_country")),
         (("country of residence",), application.get("residence_country")),
         (("country",), application.get("country")),
-        (("current location", "location", "location city", "city"), candidate.get("location")),
+        (("current location", "location"), candidate.get("location")),
+        (("location city", "city"), city),
     ]
     for aliases, answer in direct_answers:
         if answer and normalized in aliases:
@@ -190,25 +199,212 @@ def _normalized_choice(value: Any) -> str:
     return " ".join(re.findall(r"[a-z0-9]+", str(value).casefold()))
 
 
+def _choice_matches(wanted: str, option: str) -> bool:
+    if option == wanted or option.startswith(wanted) or wanted.startswith(option):
+        return True
+    if wanted in {"company careers page", "company website"} and option == "career site":
+        return True
+    if wanted == "no" and (
+        "not a protected veteran" in option or "not a veteran" in option
+    ):
+        return True
+    if wanted in {"decline to self identify", "prefer not to say"}:
+        return any(
+            phrase in option
+            for phrase in ("decline", "don t wish", "prefer not", "do not wish")
+        )
+    return False
+
+
+def _requires_nested_choice(wanted: str) -> bool:
+    return wanted in {"company careers page", "company website"}
+
+
+def _scoped_options(scope: Any, locator: Any) -> Any:
+    controls = locator.get_attribute("aria-controls")
+    if controls:
+        listbox = scope.locator(f"#{controls}")
+        if listbox.count():
+            return listbox.get_by_role("option")
+    return scope.get_by_role("option")
+
+
 def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
     locator.click()
-    options = scope.get_by_role("option")
+    # Greenhouse location fields populate their listbox only after typing.
+    # Ordinary select-like controls reject fill(), so retaining the opened list
+    # is a safe fallback for those controls.
+    editable_location = "location" in _normalized_choice(_field_question(locator))
+    filled_editable = False
+    try:
+        if editable_location and locator.get_attribute("readonly") is None:
+            locator.fill("")
+            locator.press_sequentially(str(answer), delay=75)
+            scope.wait_for_timeout(1_000)
+            filled_editable = locator.input_value().strip() == str(answer).strip()
+    except Exception:
+        pass
+    options = _scoped_options(scope, locator)
     wanted = _normalized_choice(answer)
     fallback = None
     for index in range(options.count()):
         option = options.nth(index)
         label = option.inner_text().strip()
         normalized = _normalized_choice(label)
-        if normalized == wanted:
+        if _choice_matches(wanted, normalized):
             option.click()
+            if _requires_nested_choice(wanted):
+                scope.wait_for_timeout(500)
+                nested_options = _scoped_options(scope, locator)
+                for nested_index in range(nested_options.count()):
+                    nested = nested_options.nth(nested_index)
+                    if _normalized_choice(nested.inner_text()) == "career site":
+                        nested.click()
+                        break
             return True
-        if normalized.startswith(wanted) or wanted.startswith(normalized):
+        if fallback is None and (
+            normalized.startswith(wanted) or wanted.startswith(normalized)
+        ):
             fallback = option
     if fallback is not None:
         fallback.click()
         return True
+    if filled_editable and options.count() == 0:
+        return True
     locator.press("Escape")
     return False
+
+
+def _browser_profile_key(row: dict[str, str]) -> str:
+    company = re.sub(r"[^a-z0-9]+", "-", row.get("company", "employer").casefold()).strip("-")
+    provider = row.get("ats_provider", "browser") or "browser"
+    return f"{provider}-{company}"
+
+
+def _workday_keychain_service(company: str) -> str:
+    aliases = {
+        "palo alto networks": "paloaltonetworks",
+        "nvidia": "nvidia",
+        "citi": "citi",
+        "crowdstrike": "crowdstrike",
+        "barclays": "barclays",
+        "target": "target",
+        "red hat": "redhat",
+    }
+    return f"job-discovery-workday-{aliases.get(company.casefold(), company.casefold())}"
+
+
+def _sign_in_workday(page: Any, profile: dict[str, Any], result: StagingResult) -> bool:
+    email = profile.get("application", {}).get("email")
+    if not email:
+        return False
+    email_sign_in = page.get_by_role("button", name="Sign in with email", exact=True)
+    if email_sign_in.count():
+        email_sign_in.first.click()
+        page.wait_for_timeout(500)
+    elif page.locator('[data-automation-id="signInLink"]').count():
+        page.locator('[data-automation-id="signInLink"]').click()
+        page.wait_for_timeout(500)
+    password_input = page.locator('[data-automation-id="password"]')
+    if not password_input.count():
+        return True
+    try:
+        password = subprocess.check_output(
+            [
+                "security",
+                "find-generic-password",
+                "-a",
+                email,
+                "-s",
+                _workday_keychain_service(result.company),
+                "-w",
+            ],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        result.status = "needs_input"
+        result.unresolved_questions.append(
+            f"Workday account credentials unavailable for {result.company}"
+        )
+        return False
+    for locator, value in (
+        (page.locator('[data-automation-id="email"]'), email),
+        (password_input, password),
+    ):
+        locator.click()
+        locator.fill("")
+        locator.press_sequentially(value, delay=15)
+        locator.press("Tab")
+    submit = page.get_by_role("button", name="Submit", exact=True)
+    if not submit.count():
+        return False
+    box = submit.bounding_box()
+    if box:
+        page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+    else:
+        submit.click()
+    page.wait_for_timeout(7_000)
+    if page.get_by_text(re.compile(r"verify your account", re.I)).count():
+        result.status = "needs_input"
+        result.unresolved_questions.append(
+            f"Workday email verification required for {result.company}"
+        )
+        return False
+    return page.locator('[data-automation-id="password"]').count() == 0
+
+
+def _enter_application(
+    page: Any, result: StagingResult, profile: dict[str, Any]
+) -> bool:
+    """Navigate a job landing page into the actual application form."""
+    try:
+        page.wait_for_load_state("networkidle", timeout=60_000)
+    except Exception:
+        page.wait_for_timeout(5_000)
+
+    if page.locator('input[type="file"]').count():
+        return True
+
+    # MongoDB embeds its Greenhouse form after the marketing page loads. The
+    # embed occasionally misses its first initialization, so retry once before
+    # treating the page as form-less.
+    if "mongodb.com/careers/jobs/" in page.url:
+        try:
+            page.locator('input[type="file"]').wait_for(state="attached", timeout=10_000)
+        except Exception:
+            page.reload(wait_until="domcontentloaded")
+            page.wait_for_timeout(8_000)
+        if page.locator('input[type="file"]').count():
+            return True
+
+    apply_controls = page.get_by_role("button", name=APPLY_PATTERN).or_(
+        page.get_by_role("link", name=APPLY_PATTERN)
+    )
+    if apply_controls.count():
+        apply_controls.first.click()
+        page.wait_for_timeout(750)
+
+    # Workday opens a second "Start Your Application" dialog.
+    start_controls = page.get_by_role("button", name=START_APPLICATION_PATTERN)
+    if start_controls.count():
+        preferred = page.get_by_role("button", name="Autofill with Resume", exact=True)
+        (preferred.first if preferred.count() else start_controls.first).click()
+        try:
+            page.wait_for_url(re.compile(r"/apply/"), timeout=30_000)
+        except Exception:
+            pass
+        page.wait_for_timeout(8_000)
+
+    # Workday accounts are tenant-specific. Identify this gate explicitly so a
+    # landing page can never be mistaken for a staged application.
+    if "myworkdayjobs.com" in page.url and (
+        page.locator('[data-automation-id="password"]').count()
+        or page.get_by_role("button", name="Sign in with email", exact=True).count()
+    ):
+        return _sign_in_workday(page, profile, result)
+
+    return True
 
 
 def _stage_page(
@@ -244,6 +440,11 @@ def _stage_page(
         if status == "approved" and str(answer).casefold() in {"yes", "true", "1"}:
             locator.check()
             result.filled_fields.append(question)
+
+    previous_worker = page.locator('input[name="candidateIsPreviousWorker"][value="false"]')
+    if previous_worker.count() and not previous_worker.is_checked():
+        previous_worker.check(force=True)
+        result.filled_fields.append("Previously worked for this organization: No")
 
     comboboxes = page.get_by_role("combobox")
     for index in range(comboboxes.count()):
@@ -294,6 +495,8 @@ def _stage_page(
             if status == "approved" and answer is not None:
                 if field_type == "select":
                     filled = _choose_option(locator, answer)
+                elif locator.get_attribute("aria-autocomplete") == "list":
+                    filled = _choose_combobox_option(page, locator, answer)
                 else:
                     locator.fill(str(answer))
                     filled = True
@@ -306,6 +509,8 @@ def _stage_page(
                     or locator.get_attribute("aria-required") == "true"
                     or "*" in question
                 )
+                if question.casefold().startswith("local ") and "*" not in question:
+                    is_required = False
                 if is_required:
                     seen_questions.add(question)
                     result.unresolved_questions.append(question)
@@ -372,24 +577,15 @@ def stage_application(
     state_path = artifact_dir / "browser-state.json"
     try:
         with sync_playwright() as playwright:
-            browser = playwright.chromium.launch(headless=headless)
-            context_args: dict[str, Any] = {}
-            if state_path.exists():
-                context_args["storage_state"] = str(state_path)
-            context = browser.new_context(**context_args)
-            page = context.new_page()
+            profile_dir = artifact_dir / "browser-profiles" / _browser_profile_key(row)
+            profile_dir.mkdir(parents=True, exist_ok=True)
+            context = playwright.chromium.launch_persistent_context(
+                str(profile_dir), headless=headless
+            )
+            page = context.pages[0] if context.pages else context.new_page()
             page.set_default_timeout(timeout_ms)
             page.goto(row["direct_apply_url"], wait_until="domcontentloaded")
-            page.wait_for_timeout(1500)
-
-            if page.locator('input[type="file"]').count() == 0:
-                apply_controls = page.get_by_role("button", name=APPLY_PATTERN).or_(
-                    page.get_by_role("link", name=APPLY_PATTERN)
-                )
-                if apply_controls.count():
-                    apply_controls.first.click()
-                    page.wait_for_load_state("domcontentloaded")
-                    page.wait_for_timeout(1000)
+            entered_application = _enter_application(page, result, profile)
 
             form_scope = page
             for frame in page.frames:
@@ -397,18 +593,51 @@ def stage_application(
                     form_scope = frame
                     break
 
-            _stage_page(
-                form_scope,
-                row=row,
-                profile=profile,
-                faq_path=faq_path,
-                backlog_path=backlog_path,
-                resume_path=resume_path,
-                result=result,
-            )
+            if entered_application:
+                for _ in range(8):
+                    _stage_page(
+                        form_scope,
+                        row=row,
+                        profile=profile,
+                        faq_path=faq_path,
+                        backlog_path=backlog_path,
+                        resume_path=resume_path,
+                        result=result,
+                    )
+                    if result.unresolved_questions or "myworkdayjobs.com" not in page.url:
+                        break
+                    next_button = form_scope.locator(
+                        '[data-automation-id="pageFooterNextButton"]'
+                    )
+                    if not next_button.count():
+                        break
+                    next_text = next_button.inner_text().strip().casefold()
+                    if "submit" in next_text:
+                        break
+                    next_button.click()
+                    page.wait_for_timeout(4_000)
+                    validation_errors = form_scope.locator(
+                        '[role="alert"], [data-automation-id="errorMessage"]'
+                    )
+                    messages: list[str] = []
+                    for error_index in range(validation_errors.count()):
+                        error = validation_errors.nth(error_index)
+                        if error.is_visible():
+                            message = error.inner_text().strip()
+                            if message and message not in messages:
+                                messages.append(message)
+                    if messages:
+                        result.unresolved_questions.extend(
+                            message
+                            for message in messages
+                            if message not in result.unresolved_questions
+                        )
+                        break
 
             submit_controls = form_scope.get_by_role("button", name=FINAL_SUBMIT_PATTERN)
-            if result.unresolved_questions:
+            if not entered_application:
+                pass
+            elif result.unresolved_questions:
                 result.status = "needs_input"
             elif submit_controls.count() == 0:
                 result.status = "staged_for_review"
@@ -459,7 +688,6 @@ def stage_application(
             result.screenshot = str(screenshot_path)
             context.storage_state(path=str(state_path))
             context.close()
-            browser.close()
     except Exception as exc:
         result.status = "failed"
         result.error = f"{type(exc).__name__}: {exc}"

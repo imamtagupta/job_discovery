@@ -2,10 +2,27 @@ import csv
 from pathlib import Path
 
 from job_discovery.services.browser_applications import (
+    _browser_profile_key,
+    _choice_matches,
+    _requires_nested_choice,
     answer_for_question,
     load_discovered_jobs,
     load_queue_job,
 )
+
+
+def test_workday_choice_matching_is_scoped_and_semantic():
+    assert _choice_matches("company careers page", "career site")
+    assert _choice_matches("no", "i am not a protected veteran")
+    assert not _choice_matches("company careers page", "india 91")
+    assert _requires_nested_choice("company careers page")
+    assert not _requires_nested_choice("india 91")
+
+
+def test_browser_profile_key_is_stable_per_employer():
+    assert _browser_profile_key(
+        {"company": "Palo Alto Networks", "ats_provider": "workday"}
+    ) == "workday-palo-alto-networks"
 
 
 def test_load_queue_job_selects_only_ready_rows(tmp_path):
@@ -80,6 +97,60 @@ def test_answer_for_question_uses_profile_application_answers():
         faq_path=Path("config/application_faq.yaml"),
         location="India",
     ) == ("approved", "Company careers page")
+
+
+def test_answer_for_question_matches_required_country_and_city_labels():
+    profile = {
+        "candidate": {"location": "Mumbai, India"},
+        "application": {"country": "India"},
+    }
+    faq = Path("config/application_faq.yaml")
+    assert answer_for_question(
+        "Country*", profile=profile, faq_path=faq, location="New York City"
+    ) == ("approved", "India")
+    assert answer_for_question(
+        "Location (City)*", profile=profile, faq_path=faq, location="New York City"
+    ) == ("approved", "Mumbai")
+
+
+def test_answer_for_question_matches_workday_label_variants():
+    profile = {
+        "application": {
+            "first_name": "Mamta",
+            "answers": {
+                "source": {
+                    "question": "How did you hear about this job?",
+                    "aliases": ["How Did You Hear About Us?"],
+                    "answer": "Company careers page",
+                    "status": "approved",
+                }
+            },
+        }
+    }
+    faq = Path("config/application_faq.yaml")
+    assert answer_for_question(
+        "Given Name(s)*", profile=profile, faq_path=faq, location="India"
+    ) == ("approved", "Mamta")
+    assert answer_for_question(
+        "How Did You Hear About Us?*", profile=profile, faq_path=faq, location="India"
+    ) == ("approved", "Company careers page")
+
+
+def test_answer_for_question_matches_local_name_variants():
+    profile = {
+        "application": {
+            "first_name": "Mamta",
+            "last_name": "Gupta",
+            "preferred_name": "Mamta",
+        }
+    }
+    faq = Path("config/application_faq.yaml")
+    assert answer_for_question(
+        "Local Given Name(s)", profile=profile, faq_path=faq, location="India"
+    ) == ("approved", "Mamta")
+    assert answer_for_question(
+        "Local Family Name", profile=profile, faq_path=faq, location="India"
+    ) == ("approved", "Gupta")
 
 
 def test_load_discovered_jobs_prioritizes_report_and_filters_ineligible(tmp_path):

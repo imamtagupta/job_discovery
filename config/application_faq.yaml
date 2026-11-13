@@ -1,5 +1,20 @@
 version: 1
 entries:
+  - key: address_line_1
+    question: Address Line 1
+    aliases: [Street Address, Address]
+    answer: 602, GP BUilding, Omkar SRA Street/Road
+    status: approved
+  - key: full_address
+    question: Full Address
+    aliases: [Complete Address, Mailing Address]
+    answer: 602, GP BUilding, Omkar SRA Street/Road, 400097
+    status: approved
+  - key: postal_code
+    question: Postal Code
+    aliases: [ZIP Code, ZIP/Postal Code, PIN Code]
+    answer: "400097"
+    status: approved
   - key: years_of_experience
     question: How many years of professional experience do you have?
     aliases:
@@ -11,6 +26,11 @@ entries:
     question: What is your current location?
     aliases: [Current city, "Where are you currently located?"]
     answer: Mumbai, India
+    status: approved
+  - key: country_phone_code
+    question: Country Phone Code
+    aliases: [Phone Country Code]
+    answer: India (+91)
     status: approved
   - key: current_employer
     question: Who is your current employer?
@@ -60,7 +80,7 @@ entries:
     status: approved
   - key: gender_identity
     question: Gender Identity (Select one)
-    aliases: [Gender identity]
+    aliases: [Gender identity, Gender Identity*]
     answer: Decline to self-identify
     status: approved
   - key: demographic_consent
