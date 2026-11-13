@@ -289,6 +289,6 @@ location_priority:
   - {label: Hyderabad, aliases: [hyderabad], score: 90}
   - {label: Bengaluru, aliases: [bengaluru, bangalore], score: 95}
 compensation:
-  india_min_lpa: 35
+  india_min_lpa: 40
   international_min_inr_lpa: 60
 
