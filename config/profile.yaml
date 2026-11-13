@@ -285,9 +285,9 @@ achievements:
 location_priority:
   - {label: Mumbai, aliases: [mumbai, navi mumbai, thane], score: 100}
   - {label: Remote India, aliases: [remote india, india remote, anywhere in india], score: 95}
-  - {label: Pune, aliases: [pune], score: 85}
-  - {label: Hyderabad, aliases: [hyderabad], score: 80}
-  - {label: Bengaluru, aliases: [bengaluru, bangalore], score: 75}
+  - {label: Pune, aliases: [pune], score: 100}
+  - {label: Hyderabad, aliases: [hyderabad], score: 90}
+  - {label: Bengaluru, aliases: [bengaluru, bangalore], score: 95}
 compensation:
   india_min_lpa: 35
   international_min_inr_lpa: 60
