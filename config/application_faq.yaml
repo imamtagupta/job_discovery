@@ -5,6 +5,10 @@ entries:
     aliases: ["How did you hear about this job?", "How did you learn about this job?"]
     answer: Career Site
     status: approved
+  - key: phone_extension
+    question: Phone Extension
+    answer: "+91"
+    status: approved
   - key: address_line_1
     question: Address Line 1
     aliases: [Street Address, Address]

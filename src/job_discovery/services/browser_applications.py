@@ -323,22 +323,12 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
                 nested_selected = False
                 for nested_index in range(nested_rows.count() - 1, -1, -1):
                     nested_row = nested_rows.nth(nested_index)
-                    if nested_row.is_visible() and _is_selectable_prompt_option(nested_row):
+                    # Workday's nested row has data-automation-label but often no
+                    # ARIA role. The same-text heading does not have this label.
+                    if nested_row.is_visible():
                         nested_row.click()
                         nested_selected = True
                         break
-                if not nested_selected:
-                    visible_career_rows = scope.locator(
-                        '[data-automation-id="promptOption"]'
-                    ).filter(has_text=re.compile(r"^Career Site$", re.I))
-                    for nested_index in range(
-                        visible_career_rows.count() - 1, -1, -1
-                    ):
-                        nested_row = visible_career_rows.nth(nested_index)
-                        if nested_row.is_visible() and _is_selectable_prompt_option(nested_row):
-                            nested_row.click()
-                            nested_selected = True
-                            break
                 if not nested_selected:
                     nested_radio = scope.get_by_role(
                         "radio", name="Career Site", exact=True

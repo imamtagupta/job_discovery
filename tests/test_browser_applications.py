@@ -216,6 +216,15 @@ def test_answer_for_question_matches_workday_label_variants():
     ) == ("approved", "Company careers page")
 
 
+def test_answer_for_question_uses_phone_extension_faq():
+    assert answer_for_question(
+        "Phone Extension",
+        profile={},
+        faq_path=Path("config/application_faq.yaml"),
+        location="India",
+    ) == ("approved", "+91")
+
+
 def test_answer_for_question_matches_local_name_variants():
     profile = {
         "application": {
