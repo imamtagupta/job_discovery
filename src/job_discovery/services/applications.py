@@ -1,4 +1,5 @@
 import csv
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -33,12 +34,18 @@ def prepare_application_queue(
             Job.first_seen_at >= cutoff,
             JobMatchScore.rejected.is_(False),
             JobMatchScore.eligibility_status == "eligible",
-            JobMatchScore.score >= minimum_score,
         )
         .order_by(JobMatchScore.application_priority.desc(), JobMatchScore.score.desc())
     )
     rows = []
     for job, score, company, application in session.execute(query):
+        location = (job.location or "").casefold()
+        india_location = bool(
+            re.search(r"\bindia\b", location)
+            or re.search(r"(?:^|[\s,/-])ind(?:$|[\s,./-])", location)
+        )
+        if score.score < minimum_score and not india_location:
+            continue
         if application is None:
             application = Application(job_id=job.id, status="ready_for_review")
             session.add(application)

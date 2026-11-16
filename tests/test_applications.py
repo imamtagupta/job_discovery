@@ -53,10 +53,12 @@ def test_prepare_application_queue_only_includes_approved_candidates(tmp_path):
                 ),
                 JobMatchScore(
                     job_id=rejected.id,
-                    score=0,
-                    application_priority=0,
-                    eligibility_status="ineligible",
-                    rejected=True,
+                    score=40,
+                    application_priority=45,
+                    eligibility_status="eligible",
+                    rejected=False,
+                    matched_skills=[],
+                    reasons=["India location"],
                 ),
             ]
         )
@@ -65,10 +67,10 @@ def test_prepare_application_queue_only_includes_approved_candidates(tmp_path):
         output = tmp_path / "application-queue.csv"
         count = prepare_application_queue(session, output)
 
-        assert count == 1
-        application = session.scalar(select(Application))
-        assert application.job_id == strong.id
-        assert application.status == "ready_for_review"
+        assert count == 2
+        applications = session.scalars(select(Application)).all()
+        assert {application.job_id for application in applications} == {strong.id, rejected.id}
+        assert all(application.status == "ready_for_review" for application in applications)
         content = output.read_text()
         assert "Senior Python Backend Engineer" in content
-        assert "Python Intern" not in content
+        assert "Python Intern" in content
