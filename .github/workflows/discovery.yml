@@ -25,7 +25,7 @@ jobs:
       GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
       GOOGLE_SERVICE_ACCOUNT_JSON: service-account.json
       SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-      AUTO_SUBMIT_APPLICATIONS: ${{ vars.AUTO_SUBMIT_APPLICATIONS || 'false' }}
+      AUTO_SUBMIT_APPLICATIONS: ${{ vars.AUTO_SUBMIT_APPLICATIONS || 'true' }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
