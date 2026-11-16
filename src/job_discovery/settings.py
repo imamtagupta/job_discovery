@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     application_question_backlog: Path = Path("config/application_question_backlog.yaml")
     log_level: str = "INFO"
     http_timeout_seconds: float = 20
-    http_per_host_concurrency: int = 3
+    http_per_host_concurrency: int = 1
     google_sheets_spreadsheet_id: str | None = None
     google_service_account_json: str | None = None
     new_match_threshold: float = 80

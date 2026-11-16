@@ -28,6 +28,9 @@ jobs:
       GOOGLE_SERVICE_ACCOUNT_JSON: service-account.json
       SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
       AUTO_SUBMIT_APPLICATIONS: ${{ vars.AUTO_SUBMIT_APPLICATIONS || 'true' }}
+      # Keep ATS fan-out conservative to avoid intermittent 429 responses.
+      HTTP_PER_HOST_CONCURRENCY: "1"
+      HTTP_TIMEOUT_SECONDS: "30"
     steps:
       - name: Check out repository
         uses: actions/checkout@v4

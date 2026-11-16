@@ -33,8 +33,8 @@ class AsyncHttpClient:
 
     @retry(
         retry=retry_if_exception_type((httpx.TransportError, RetryableHttpError)),
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=1, max=8),
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=2, min=2, max=60),
         reraise=True,
     )
     async def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
