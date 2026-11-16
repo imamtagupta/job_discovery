@@ -17,7 +17,9 @@ jobs:
   discover:
     # Pin the image so runner migrations do not change this workflow underneath us.
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    # Discovery plus sequential browser submissions can exceed the default cap
+    # when many eligible jobs are found or an ATS responds slowly.
+    timeout-minutes: 60
     env:
       # PostgreSQL is preferred. Cache-backed SQLite keeps zero-credential test runs stateful.
       DATABASE_URL: ${{ secrets.DATABASE_URL || 'sqlite:///job_discovery.db' }}
