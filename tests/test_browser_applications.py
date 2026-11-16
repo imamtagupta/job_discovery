@@ -5,6 +5,7 @@ from job_discovery.services.browser_applications import (
     _browser_profile_key,
     _choice_matches,
     _is_selectable_prompt_option,
+    _click_workday_prompt_row,
     _requires_nested_choice,
     _selection_instruction_committed,
     _workday_multiselect_container,
@@ -65,6 +66,10 @@ class _PromptOption:
 
     def locator(self, selector: str):
         return _CountLocator(self.inputs)
+
+
+def test_workday_prompt_row_click_helper_is_available():
+    assert callable(_click_workday_prompt_row)
 
 
 def test_workday_choice_matching_is_scoped_and_semantic():

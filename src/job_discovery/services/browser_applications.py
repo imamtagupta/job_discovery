@@ -243,6 +243,17 @@ def _is_selectable_prompt_option(option: Any) -> bool:
     )
 
 
+def _click_workday_prompt_row(row: Any) -> None:
+    """Click Workday's real option control, not only its presentation row."""
+    controls = row.locator(
+        'input[type="radio"], input[type="checkbox"], [role="radio"], [role="option"]'
+    )
+    if controls.count():
+        controls.last.click(force=True)
+    else:
+        row.click(force=True)
+
+
 def _workday_multiselect_container(scope: Any, locator: Any) -> Any | None:
     multiselect_id = locator.get_attribute("data-uxi-multiselect-id")
     if not multiselect_id:
@@ -322,7 +333,7 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
         if first_visible is None:
             locator.press("Escape")
             return False
-        first_visible.click(force=True)
+        _click_workday_prompt_row(first_visible)
         scope.wait_for_timeout(500)
         nested_rows = scope.locator(
             '[data-automation-id="promptOption"]'
@@ -331,7 +342,7 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
         for row_index in range(nested_rows.count() - 1, -1, -1):
             candidate = nested_rows.nth(row_index)
             if candidate.is_visible():
-                candidate.click(force=True)
+                _click_workday_prompt_row(candidate)
                 scope.wait_for_timeout(500)
                 return _nested_choice_committed(scope, locator, "Career Site")
         return False
