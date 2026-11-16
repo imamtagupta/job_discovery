@@ -31,13 +31,25 @@ class AsyncHttpClient:
         """Make a rate-limited request with bounded retry semantics."""
         return await self._request(method, url, **kwargs)
 
+    async def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
+        # GETs are idempotent and may be retried after transient throttling.
+        # POSTs are intentionally single-attempt to avoid duplicate writes.
+        if method.upper() == "GET":
+            return await self._request_get_with_retry(method, url, **kwargs)
+        return await self._request_once(method, url, **kwargs)
+
     @retry(
         retry=retry_if_exception_type((httpx.TransportError, RetryableHttpError)),
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=2, min=2, max=60),
         reraise=True,
     )
-    async def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
+    async def _request_get_with_retry(
+        self, method: str, url: str, **kwargs
+    ) -> httpx.Response:
+        return await self._request_once(method, url, **kwargs)
+
+    async def _request_once(self, method: str, url: str, **kwargs) -> httpx.Response:
         host = urlparse(url).netloc
         async with self._limits[host]:
             response = await self.client.request(method, url, **kwargs)
