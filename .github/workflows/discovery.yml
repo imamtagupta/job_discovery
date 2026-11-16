@@ -82,6 +82,7 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Apply to eligible jobs in report-first order
         if: ${{ env.AUTO_SUBMIT_APPLICATIONS == 'true' }}
+        continue-on-error: true
         run: |
           test -f MamtaGupta2026.1.pdf || {
             echo "Resume file is required for application submission." >&2
@@ -92,6 +93,7 @@ jobs:
             --jobs fetched-jobs.csv \
             --resume MamtaGupta2026.1.pdf \
             --artifacts application-artifacts \
+            --limit 1000 \
             --submit
       - name: Sync Google Sheets
         if: ${{ env.SERVICE_ACCOUNT_JSON != '' && env.GOOGLE_SHEETS_SPREADSHEET_ID != '' }}

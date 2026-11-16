@@ -307,6 +307,34 @@ def _choose_combobox_option(scope: Any, locator: Any, answer: Any) -> bool:
     else:
         options = _scoped_options(scope, locator)
     wanted = _normalized_choice(answer)
+    if wanted == "career site" and workday_container is not None:
+        # Workday renders two successive Career Site choices. Click the first
+        # visible prompt row, then re-query and click the nested row immediately
+        # after the branch opens. Do not use page text, since the heading has
+        # the same visible label.
+        career_rows = options.filter(has_text=re.compile(r"^Career Site$", re.I))
+        first_visible = None
+        for row_index in range(career_rows.count()):
+            candidate = career_rows.nth(row_index)
+            if candidate.is_visible():
+                first_visible = candidate
+                break
+        if first_visible is None:
+            locator.press("Escape")
+            return False
+        first_visible.click(force=True)
+        scope.wait_for_timeout(500)
+        nested_rows = scope.locator(
+            '[data-automation-id="promptOption"]'
+            '[data-automation-label="Career Site"]'
+        )
+        for row_index in range(nested_rows.count() - 1, -1, -1):
+            candidate = nested_rows.nth(row_index)
+            if candidate.is_visible():
+                candidate.click(force=True)
+                scope.wait_for_timeout(500)
+                return _nested_choice_committed(scope, locator, "Career Site")
+        return False
     fallback = None
     for index in range(options.count()):
         option = options.nth(index)
