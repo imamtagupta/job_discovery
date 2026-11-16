@@ -1,5 +1,6 @@
 import asyncio
 import email.utils
+import time
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from datetime import UTC, datetime
@@ -17,12 +18,16 @@ class RetryableHttpError(Exception):
 
 
 class AsyncHttpClient:
-    def __init__(self, timeout: float = 20, per_host: int = 3, transport=None):
+    def __init__(
+        self, timeout: float = 20, per_host: int = 3, min_interval: float = 1.0, transport=None
+    ):
         self.client = httpx.AsyncClient(timeout=timeout, follow_redirects=True, transport=transport)
         self.per_host = per_host
+        self.min_interval = max(min_interval, 0.0)
         self._limits: dict[str, asyncio.Semaphore] = defaultdict(
             lambda: asyncio.Semaphore(self.per_host)
         )
+        self._last_request_at: dict[str, float] = {}
 
     async def close(self) -> None:
         await self.client.aclose()
@@ -52,7 +57,11 @@ class AsyncHttpClient:
     async def _request_once(self, method: str, url: str, **kwargs) -> httpx.Response:
         host = urlparse(url).netloc
         async with self._limits[host]:
+            elapsed = time.monotonic() - self._last_request_at.get(host, 0.0)
+            if elapsed < self.min_interval:
+                await asyncio.sleep(self.min_interval - elapsed)
             response = await self.client.request(method, url, **kwargs)
+            self._last_request_at[host] = time.monotonic()
         if response.status_code == 429:
             retry_after = response.headers.get("Retry-After")
             if retry_after:

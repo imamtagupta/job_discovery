@@ -78,13 +78,14 @@ async def run_discovery(
     *,
     timeout: float = 20,
     per_host: int = 3,
+    min_interval: float = 1.0,
     notifier: Notifier | None = None,
 ) -> CollectionRun:
     sync_source_definitions(session, config)
     run = CollectionRun()
     session.add(run)
     session.commit()
-    http = AsyncHttpClient(timeout=timeout, per_host=per_host)
+    http = AsyncHttpClient(timeout=timeout, per_host=per_host, min_interval=min_interval)
     new_high_quality: list[Job] = []
     try:
         for company in config.companies:

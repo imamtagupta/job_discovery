@@ -87,6 +87,7 @@ def discover() -> None:
                 load_yaml(settings.scoring_config),
                 timeout=settings.http_timeout_seconds,
                 per_host=settings.http_per_host_concurrency,
+                min_interval=settings.http_min_interval_seconds,
             )
         )
         typer.echo(

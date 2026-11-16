@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     http_timeout_seconds: float = 20
     http_per_host_concurrency: int = 1
+    http_min_interval_seconds: float = 1.0
     google_sheets_spreadsheet_id: str | None = None
     google_service_account_json: str | None = None
     new_match_threshold: float = 80
