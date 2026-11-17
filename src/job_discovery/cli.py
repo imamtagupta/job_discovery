@@ -86,6 +86,7 @@ def discover() -> None:
                 load_yaml(settings.profile_config),
                 load_yaml(settings.scoring_config),
                 timeout=settings.http_timeout_seconds,
+                source_timeout=settings.source_timeout_seconds,
                 per_host=settings.http_per_host_concurrency,
                 min_interval=settings.http_min_interval_seconds,
                 disabled_source_types={

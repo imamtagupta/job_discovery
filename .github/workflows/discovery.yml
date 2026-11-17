@@ -31,6 +31,7 @@ jobs:
       # Keep ATS fan-out conservative to avoid intermittent 429 responses.
       HTTP_PER_HOST_CONCURRENCY: "1"
       HTTP_TIMEOUT_SECONDS: "30"
+      SOURCE_TIMEOUT_SECONDS: "180"
       HTTP_MIN_INTERVAL_SECONDS: "1"
       DISABLED_SOURCE_TYPES: "workday"
     steps:

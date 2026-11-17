@@ -77,6 +77,7 @@ async def run_discovery(
     scoring_config: dict,
     *,
     timeout: float = 20,
+    source_timeout: float = 180,
     per_host: int = 3,
     min_interval: float = 1.0,
     disabled_source_types: set[str] | None = None,
@@ -104,8 +105,16 @@ async def run_discovery(
                     )
                 )
                 try:
+                    logger.info(
+                        "collector_started company=%s source=%s timeout_seconds=%s",
+                        company.id,
+                        source_config.type,
+                        source_timeout,
+                    )
                     collector = get_collector(source_config.type, http)
-                    items = await collector.collect(company, source_config)
+                    items = await asyncio.wait_for(
+                        collector.collect(company, source_config), timeout=source_timeout
+                    )
                     seen: set[str] = set()
                     for item in items:
                         # Keep irrelevant titles out of the database and all exported feeds.
@@ -140,10 +149,16 @@ async def run_discovery(
                     source.last_success_at = datetime.now(UTC)
                     source.last_error = None
                     session.commit()
+                    logger.info(
+                        "collector_completed company=%s source=%s jobs=%s",
+                        company.id,
+                        source_config.type,
+                        len(items),
+                    )
                 except Exception as exc:
                     session.rollback()
                     logger.exception(
-                        "collector_failed",
+                        "collector_timed_out" if isinstance(exc, TimeoutError) else "collector_failed",
                         extra={"company": company.id, "source": source_config.type},
                     )
                     source = session.scalar(

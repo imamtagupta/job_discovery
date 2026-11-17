@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     application_question_backlog: Path = Path("config/application_question_backlog.yaml")
     log_level: str = "INFO"
     http_timeout_seconds: float = 20
+    source_timeout_seconds: float = 180
     http_per_host_concurrency: int = 1
     http_min_interval_seconds: float = 1.0
     disabled_source_types: str = ""
