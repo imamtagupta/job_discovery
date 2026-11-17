@@ -88,6 +88,11 @@ def discover() -> None:
                 timeout=settings.http_timeout_seconds,
                 per_host=settings.http_per_host_concurrency,
                 min_interval=settings.http_min_interval_seconds,
+                disabled_source_types={
+                    value.strip().casefold()
+                    for value in settings.disabled_source_types.split(",")
+                    if value.strip()
+                },
             )
         )
         typer.echo(

@@ -79,6 +79,7 @@ async def run_discovery(
     timeout: float = 20,
     per_host: int = 3,
     min_interval: float = 1.0,
+    disabled_source_types: set[str] | None = None,
     notifier: Notifier | None = None,
 ) -> CollectionRun:
     sync_source_definitions(session, config)
@@ -93,6 +94,8 @@ async def run_discovery(
                 continue
             for source_config in company.sources:
                 if not source_config.enabled:
+                    continue
+                if source_config.type.casefold() in (disabled_source_types or set()):
                     continue
                 source = session.scalar(
                     select(AtsSource).where(
