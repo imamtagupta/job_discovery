@@ -171,6 +171,23 @@ application:
         - "Are you willing to work from office?"
       answer: "Yes"
       status: approved
+    available_cities:
+      question: In what cities are you available to work?
+      answer: All over India
+      status: approved
+    fluent_languages:
+      question: Please select all the languages you speak fluently.
+      answer: English
+      status: approved
+    datadog_preferred_first_name:
+      question: Preferred First Name
+      answer: Mamta
+      status: approved
+    opportunity_source:
+      question: How did you hear about this opportunity?
+      aliases: ["How did you hear about this job?"]
+      answer: Company career portal
+      status: approved
     relocation_to_job_location:
       question: Do you currently live or are you willing to relocate to the job’s location?
       aliases:

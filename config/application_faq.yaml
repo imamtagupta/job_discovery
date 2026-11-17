@@ -35,6 +35,28 @@ entries:
     aliases: ["Current location"]
     answer: Mumbai, India
     status: approved
+  - key: available_cities_india
+    question: In what cities are you available to work?
+    answer: All over India
+    status: approved
+  - key: fluent_languages_english
+    question: Please select all the languages you speak fluently.
+    answer: English
+    status: approved
+  - key: datadog_preferred_first_name
+    question: Preferred First Name
+    answer: Mamta
+    status: approved
+  - key: company_career_portal_source
+    question: How did you hear about this opportunity?
+    aliases: ["How did you hear about this job?"]
+    answer: Company career portal
+    status: approved
+  - key: datadog_certifications_privacy
+    question: I certify that the information provided in this application is true and correct to the best of my knowledge.
+    aliases: ["I understand my application will be processed in accordance with Datadog’s Candidate Privacy Policy."]
+    answer: "Yes"
+    status: approved
   - key: address_line_1
     question: Address Line 1
     aliases: [Street Address, Address]
