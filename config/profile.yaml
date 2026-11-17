@@ -158,12 +158,17 @@ application:
       status: approved
     notice_period_days:
       question: Notice Period
-      aliases: [Notice period in days]
-      answer: 60 days
+      aliases:
+        - Notice period in days
+        - "How many days of your Notice period?"
+      answer: 60 - 90 Days
       status: approved
     relocation:
       question: Relocation
-      aliases: ["Are you willing to relocate?", "Willing to relocate"]
+      aliases:
+        - "Are you willing to relocate?"
+        - "Willing to relocate"
+        - "Are you willing to work from office?"
       answer: "Yes"
       status: approved
     relocation_to_job_location:

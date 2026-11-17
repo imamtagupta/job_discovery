@@ -16,13 +16,24 @@ entries:
     status: approved
   - key: notice_period_60_days
     question: Notice Period
-    aliases: ["What is your notice period?", "Notice period in days"]
-    answer: 60 days
+    aliases:
+      - "What is your notice period?"
+      - "Notice period in days"
+      - "How many days of your Notice period?"
+    answer: 60 - 90 Days
     status: approved
   - key: relocation_yes
     question: Relocation
-    aliases: ["Are you willing to relocate?", "Willing to relocate"]
+    aliases:
+      - "Are you willing to relocate?"
+      - "Willing to relocate"
+      - "Are you willing to work from office?"
     answer: "Yes"
+    status: approved
+  - key: current_location_mumbai
+    question: What is your current location?
+    aliases: ["Current location"]
+    answer: Mumbai, India
     status: approved
   - key: address_line_1
     question: Address Line 1

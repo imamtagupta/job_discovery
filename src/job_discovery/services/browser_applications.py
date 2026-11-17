@@ -123,7 +123,7 @@ def answer_for_question(
         (("preferred name", "local given name s"), application.get("preferred_name")),
         (("email", "email address"), application.get("email")),
         (("phone", "phone number", "mobile", "mobile number"), application.get("phone")),
-        (("linkedin", "linkedin profile"), application.get("linkedin")),
+        (("linkedin", "linkedin profile", "linkedin url"), application.get("linkedin")),
         (("github", "github url", "github profile"), application.get("github")),
         (("pronouns",), application.get("pronouns")),
         (("passport country",), application.get("passport_country")),
