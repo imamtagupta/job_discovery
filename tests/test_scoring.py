@@ -1,5 +1,5 @@
 from job_discovery.models import Company, Job
-from job_discovery.services.scoring import score_job
+from job_discovery.services.scoring import is_software_engineering_title, score_job
 
 
 def make_job(**values):
@@ -46,6 +46,13 @@ def test_hard_filter_rejects_non_engineering_roles(profile, scoring_config):
         result = score_job(make_job(title=title), profile, scoring_config)
         assert result.rejected
         assert result.score == 0
+
+
+def test_title_gate_allows_only_software_engineering_titles(scoring_config):
+    assert is_software_engineering_title("Senior Python Backend Engineer", scoring_config)
+    assert is_software_engineering_title("Platform Software Developer", scoring_config)
+    assert not is_software_engineering_title("Product Manager", scoring_config)
+    assert not is_software_engineering_title("Account Executive", scoring_config)
 
 
 def test_current_and_past_employers_are_rejected(profile, scoring_config):

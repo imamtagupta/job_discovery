@@ -15,7 +15,7 @@ from .services.ingestion import (
     normalize_text,
     upsert_job,
 )
-from .services.scoring import score_job
+from .services.scoring import is_software_engineering_title, score_job
 
 logger = logging.getLogger(__name__)
 
@@ -108,8 +108,13 @@ async def run_discovery(
                     items = await collector.collect(company, source_config)
                     seen: set[str] = set()
                     for item in items:
-                        job, change = upsert_job(session, run.id, item)
+                        # Keep irrelevant titles out of the database and all exported feeds.
+                        # Add the external id to `seen` first so an old, now-excluded record
+                        # is not incorrectly marked missing during this successful collection.
                         seen.add(item.external_job_id)
+                        if not is_software_engineering_title(item.title, scoring_config):
+                            continue
+                        job, change = upsert_job(session, run.id, item)
                         duplicate = detect_duplicate(session, job)
                         if duplicate and not job.duplicate_of_id:
                             job.duplicate_of_id = duplicate.id

@@ -64,6 +64,8 @@ def export_jobs_csv(session: Session, output: Path, since_hours: int | None = No
         writer.writeheader()
         for job in jobs:
             score = scores.get(job.id)
+            if score and score.rejected:
+                continue
             application = applications.get(job.id)
             row = {
                 "stable_job_id": job.stable_id,

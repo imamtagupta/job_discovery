@@ -10,6 +10,18 @@ def _contains(text: str, term: str) -> bool:
     return bool(re.search(rf"(?<!\w){re.escape(term.lower())}(?!\w)", text.lower()))
 
 
+def is_software_engineering_title(title: str, config: dict[str, Any]) -> bool:
+    """Return whether a title belongs in the software-engineering discovery feed."""
+    hard = config.get("hard_filters", {})
+    normalized = title.strip().lower()
+    if any(_contains(normalized, term) for term in hard.get("excluded_title_terms", [])):
+        return False
+    return any(
+        _contains(normalized, marker)
+        for marker in hard.get("engineering_title_markers", [])
+    )
+
+
 def _skills(profile: dict[str, Any]) -> dict[str, list[str]]:
     return {
         name: aliases for tier in profile["skill_tiers"].values() for name, aliases in tier.items()
@@ -93,7 +105,7 @@ def score_job(job: Job, profile: dict[str, Any], config: dict[str, Any]) -> Scor
     text = f"{title} {description.lower()}"
     hard = config["hard_filters"]
     rejection = [term for term in hard["excluded_title_terms"] if _contains(title, term)]
-    if not any(_contains(title, marker) for marker in hard.get("engineering_title_markers", [])):
+    if not is_software_engineering_title(title, config):
         rejection.append("title is outside the engineering role scope")
     company_name = job.company.name if job.company else job.company_id
     normalized_company = re.sub(r"[^a-z0-9]+", " ", company_name.lower()).strip()
