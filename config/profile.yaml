@@ -152,6 +152,20 @@ application:
       question: Phone Extension
       answer: "+91"
       status: approved
+    immediate_joiner:
+      question: Immediate Joiner
+      answer: "Yes"
+      status: approved
+    notice_period_days:
+      question: Notice Period
+      aliases: [Notice period in days]
+      answer: 60 days
+      status: approved
+    relocation:
+      question: Relocation
+      aliases: ["Are you willing to relocate?", "Willing to relocate"]
+      answer: "Yes"
+      status: approved
     relocation_to_job_location:
       question: Do you currently live or are you willing to relocate to the job’s location?
       aliases:

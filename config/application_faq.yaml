@@ -9,6 +9,21 @@ entries:
     question: Phone Extension
     answer: "+91"
     status: approved
+  - key: immediate_joiner
+    question: Immediate Joiner
+    aliases: ["Are you an immediate joiner?", "Can you join immediately?"]
+    answer: "Yes"
+    status: approved
+  - key: notice_period_60_days
+    question: Notice Period
+    aliases: ["What is your notice period?", "Notice period in days"]
+    answer: 60 days
+    status: approved
+  - key: relocation_yes
+    question: Relocation
+    aliases: ["Are you willing to relocate?", "Willing to relocate"]
+    answer: "Yes"
+    status: approved
   - key: address_line_1
     question: Address Line 1
     aliases: [Street Address, Address]
