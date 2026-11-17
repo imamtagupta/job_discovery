@@ -57,9 +57,10 @@ class AsyncHttpClient:
     async def _request_once(self, method: str, url: str, **kwargs) -> httpx.Response:
         host = urlparse(url).netloc
         async with self._limits[host]:
+            interval = self.min_interval if method.upper() == "POST" else 0.0
             elapsed = time.monotonic() - self._last_request_at.get(host, 0.0)
-            if elapsed < self.min_interval:
-                await asyncio.sleep(self.min_interval - elapsed)
+            if elapsed < interval:
+                await asyncio.sleep(interval - elapsed)
             response = await self.client.request(method, url, **kwargs)
             self._last_request_at[host] = time.monotonic()
         if response.status_code == 429:
