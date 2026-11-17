@@ -32,7 +32,9 @@ def export_jobs_csv(session: Session, output: Path, since_hours: int | None = No
     query = select(Job).where(Job.availability == "active")
     if since_hours is not None:
         cutoff = datetime.now(UTC) - timedelta(hours=since_hours)
-        query = query.where(Job.first_seen_at >= cutoff)
+        # Discovery time is not posting time; strict recent-job feeds require a
+        # source timestamp supplied by the employer's ATS.
+        query = query.where(Job.source_posted_at.is_not(None), Job.source_posted_at >= cutoff)
     jobs = list(session.scalars(query.order_by(Job.first_seen_at.desc(), Job.id.desc())))
     fields = [
         "stable_job_id",
@@ -105,7 +107,9 @@ def build_discovery_report(
     jobs_query = select(Job).where(Job.availability == "active")
     if since_hours is not None:
         cutoff = datetime.now(UTC) - timedelta(hours=since_hours)
-        jobs_query = jobs_query.where(Job.first_seen_at >= cutoff)
+        jobs_query = jobs_query.where(
+            Job.source_posted_at.is_not(None), Job.source_posted_at >= cutoff
+        )
     jobs = list(session.scalars(jobs_query))
     scores = {item.job_id: item for item in session.scalars(select(JobMatchScore))}
     companies = {item.id: item.name for item in session.scalars(select(Company))}

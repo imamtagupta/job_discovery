@@ -31,6 +31,9 @@ class GreenhouseCollector(Collector):
                     description_text=BeautifulSoup(html, "html.parser").get_text(" ", strip=True),
                     apply_url=item["absolute_url"],
                     canonical_url=item["absolute_url"],
+                    source_posted_at=_timestamp(
+                        item.get("first_published") or item.get("created_at")
+                    ),
                     source_updated_at=_timestamp(item.get("updated_at")),
                     raw=item,
                 )
