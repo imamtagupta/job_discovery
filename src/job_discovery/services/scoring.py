@@ -93,6 +93,8 @@ def score_job(job: Job, profile: dict[str, Any], config: dict[str, Any]) -> Scor
     text = f"{title} {description.lower()}"
     hard = config["hard_filters"]
     rejection = [term for term in hard["excluded_title_terms"] if _contains(title, term)]
+    if not any(_contains(title, marker) for marker in hard.get("engineering_title_markers", [])):
+        rejection.append("title is outside the engineering role scope")
     company_name = job.company.name if job.company else job.company_id
     normalized_company = re.sub(r"[^a-z0-9]+", " ", company_name.lower()).strip()
     excluded_employer = next(

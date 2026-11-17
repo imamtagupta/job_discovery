@@ -41,6 +41,13 @@ def test_hard_filter_rejects_intern(profile, scoring_config):
     assert result.score == 0
 
 
+def test_hard_filter_rejects_non_engineering_roles(profile, scoring_config):
+    for title in ("Product Manager", "Senior Account Executive", "Technical Recruiter"):
+        result = score_job(make_job(title=title), profile, scoring_config)
+        assert result.rejected
+        assert result.score == 0
+
+
 def test_current_and_past_employers_are_rejected(profile, scoring_config):
     for company_name in (
         "JPMorgan Chase",

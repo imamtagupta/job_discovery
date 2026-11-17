@@ -17,7 +17,10 @@ application_priority_weights:
   freshness: 0.10
   company_preference: 0.15
 hard_filters:
-  excluded_title_terms: [intern, internship, graduate, fresher, junior, qa engineer, sdet, test engineer, automation tester, tester, data analyst, business intelligence, data scientist, research scientist, mobile engineer, frontend engineer, front-end engineer, helpdesk, technical support, professional services consultant, customer solution architect, product manager]
+  # Discovery is intentionally limited to engineering roles matching the candidate's
+  # Python/backend/platform/cloud/AI/full-stack/quantitative experience.
+  engineering_title_markers: [engineer, engineering, developer, software, backend, platform, infrastructure, sre, site reliability, devops, data engineering, machine learning engineering, ai engineering]
+  excluded_title_terms: [intern, internship, graduate, fresher, junior, qa engineer, sdet, test engineer, automation tester, tester, data analyst, business intelligence, data scientist, research scientist, mobile engineer, frontend engineer, front-end engineer, helpdesk, technical support, professional services consultant, customer solution architect, product manager, product management, project manager, program manager, technical program manager, sales, account executive, account manager, business development, customer success, customer support, recruiter, recruiting, human resources, hr, marketing, finance, legal, operations, administrative]
   overleveled_title_terms: [staff, principal, distinguished engineer, engineering manager, director of engineering]
   excluded_employment_types: [internship, contract-to-hire]
 mandatory_markers: [required, requirements, must have, minimum qualifications, what you need]
