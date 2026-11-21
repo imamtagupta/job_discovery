@@ -1,0 +1,83 @@
+name: Daily Instahyre applications
+
+on:
+  schedule:
+    # GitHub cron is UTC: 03:00 UTC is 08:30 Asia/Kolkata.
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Maximum verified applications for this run
+        required: false
+        default: "100"
+      dry_run:
+        description: Discover and validate jobs without submitting applications
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: instahyre-daily-applications
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INSTAHYRE_STORAGE_STATE_JSON: ${{ secrets.INSTAHYRE_STORAGE_STATE_JSON }}
+      APPLICATION_LIMIT: ${{ inputs.limit || '100' }}
+      DRY_RUN: ${{ inputs.dry_run || 'false' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Require authenticated Instahyre browser state
+        run: |
+          if [ -z "$INSTAHYRE_STORAGE_STATE_JSON" ]; then
+            echo "Add INSTAHYRE_STORAGE_STATE_JSON as a repository Actions secret." >&2
+            exit 1
+          fi
+          printf '%s' "$INSTAHYRE_STORAGE_STATE_JSON" > instahyre-storage-state.json
+          chmod 600 instahyre-storage-state.json
+
+      - name: Install application browser
+        run: |
+          python -m pip install ".[applications]"
+          python -m playwright install --with-deps chromium
+
+      - name: Apply to eligible Instahyre jobs
+        # The command catches and records individual-job failures, then continues.
+        run: |
+          DRY_RUN_FLAG=""
+          if [ "$DRY_RUN" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+          python -m job_discovery.services.instahyre \
+            --storage-state instahyre-storage-state.json \
+            --artifacts instahyre-application-artifacts \
+            --candidate-years 6 \
+            --limit "$APPLICATION_LIMIT" \
+            $DRY_RUN_FLAG
+
+      - name: Remove browser state
+        if: ${{ always() }}
+        run: rm -f instahyre-storage-state.json
+
+      - name: Upload application report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: instahyre-applications-${{ github.run_number }}
+          path: instahyre-application-artifacts/
+          if-no-files-found: warn
+          retention-days: 30

@@ -10,4 +10,6 @@ dist/
 build/
 service-account*.json
 application-artifacts/
+instahyre-application-artifacts/
+instahyre-storage-state.json
 

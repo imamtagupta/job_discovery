@@ -113,6 +113,30 @@ detected required answer is approved. Unknown questions, login prompts, CAPTCHA 
 unconfirmed submissions remain in the uploaded `application-artifacts` for review. Do not commit a
 resume containing personal information to a public repository.
 
+### Daily Instahyre applications
+
+`.github/workflows/instahyre-apply.yml` runs every day at approximately 08:30 Asia/Kolkata and
+can also be started manually. It searches Instahyre for jobs whose experience range includes six
+years, whose details mention Python, and whose location matches the candidate's saved preferences.
+It submits at most 100 visibly verified applications per run. A blocked or failed application is
+recorded and skipped without stopping the remaining batch. It never invents screening answers.
+
+GitHub-hosted runners cannot reuse a local Chrome profile or the Playwright MCP Bridge extension.
+Add an authenticated Playwright storage-state JSON document as the repository Actions secret
+`INSTAHYRE_STORAGE_STATE_JSON`. Treat this value like a password: never commit it, print it, or
+upload it as an artifact. Instahyre may expire the session periodically; when the workflow reports
+that authentication is missing, refresh the secret from a newly authenticated browser session.
+
+Create the state locally after installing the application browser, then copy the complete JSON
+file into the GitHub secret and delete the local file:
+
+```bash
+python3 -m pip install -e '.[applications]'
+python3 -m playwright install chromium
+python -m job_discovery.services.instahyre --capture-session
+gh secret set INSTAHYRE_STORAGE_STATE_JSON < instahyre-storage-state.json
+```
+
 ## Application question knowledge base
 
 Approved reusable form answers live in `config/application_faq.yaml`. Matching is deliberately
@@ -128,7 +152,7 @@ Implement `Collector.collect()` under `src/job_discovery/collectors`, register t
 
 ## Accuracy boundaries
 
-`first_seen_at` means first discovered by this service, not posting time. Source timestamps are stored separately when supplied. Salary, sponsorship, and remote eligibility remain unknown unless the listing explicitly provides evidence. No application submission is performed.
+`first_seen_at` means first discovered by this service, not posting time. Source timestamps are stored separately when supplied. Salary, sponsorship, and remote eligibility remain unknown unless the listing explicitly provides evidence. Discovery and scoring never submit applications; only the explicitly enabled application workflows do.
 
 ### Stage an application in Chromium
 
