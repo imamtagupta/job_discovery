@@ -3,6 +3,7 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 INSTAHYRE_USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -175,11 +176,29 @@ def capture_instahyre_storage_state(output: Path) -> None:
         context = browser.new_context()
         page = context.new_page()
         page.goto("https://www.instahyre.com/login/", wait_until="domcontentloaded")
-        input("Log in to Instahyre in the browser, then press Enter here to save the session: ")
-        if page.locator('a[href="/logout/"]').count() == 0:
+        print("Log in to Instahyre in the browser; the session will save automatically.")
+        for _ in range(600):
+            if page.locator('a[href="/logout/"]').count():
+                break
+            page.wait_for_timeout(1_000)
+        else:
             browser.close()
-            raise RuntimeError("Instahyre login was not detected; storage state was not saved")
-        context.storage_state(path=str(output))
+            raise RuntimeError(
+                "Instahyre login was not detected within 10 minutes; storage state was not saved"
+            )
+        state = context.storage_state()
+        state["cookies"] = [
+            cookie
+            for cookie in state.get("cookies", [])
+            if cookie.get("domain", "").lstrip(".").endswith("instahyre.com")
+        ]
+        state["origins"] = [
+            origin
+            for origin in state.get("origins", [])
+            if (urlparse(origin.get("origin", "")).hostname or "").endswith("instahyre.com")
+        ]
+        output.write_text(json.dumps(state, indent=2), encoding="utf-8")
+        output.chmod(0o600)
         browser.close()
 
 
@@ -268,9 +287,7 @@ def run_instahyre_applications(
                 minimum = details.get("workex_min")
                 maximum = details.get("workex_max")
                 experience = (
-                    f"{minimum}-{maximum}"
-                    if minimum is not None and maximum is not None
-                    else None
+                    f"{minimum}-{maximum}" if minimum is not None and maximum is not None else None
                 )
                 searchable = " ".join(
                     [
