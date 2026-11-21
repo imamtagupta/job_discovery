@@ -4,6 +4,11 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+INSTAHYRE_USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Safari/537.36"
+)
+
 
 @dataclass
 class InstahyreResult:
@@ -87,6 +92,30 @@ def _select_page(page: Any, number: int) -> None:
     page.wait_for_timeout(1_500)
 
 
+def _search_python_jobs(page: Any) -> None:
+    search = page.get_by_role("textbox", name="Enter skills or title, e.g Java, C++")
+    search.wait_for(state="visible", timeout=20_000)
+    search.fill("Python")
+    page.get_by_role("button", name="Search").evaluate(
+        """element => {
+          let scope = window.angular && window.angular.element(element).scope();
+          while (scope && typeof scope.searchCustomJobs !== 'function') scope = scope.$parent;
+          if (scope) {
+            scope.searchCustomJobs(undefined, null, null, true);
+            return true;
+          }
+          element.click();
+          return false;
+        }"""
+    )
+    page.wait_for_function(
+        """() => location.search.includes('search=true') &&
+          document.body.innerText.includes('Search Results')""",
+        timeout=20_000,
+    )
+    page.wait_for_timeout(1_500)
+
+
 def _apply(page: Any, job: dict[str, Any], experience: str | None) -> InstahyreResult:
     result = InstahyreResult(
         job_id=job.get("id"),
@@ -162,6 +191,7 @@ def run_instahyre_applications(
     candidate_years: int = 6,
     max_search_pages: int = 20,
     dry_run: bool = False,
+    user_agent: str = INSTAHYRE_USER_AGENT,
 ) -> dict[str, Any]:
     try:
         from playwright.sync_api import sync_playwright
@@ -181,7 +211,7 @@ def run_instahyre_applications(
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
-        context = browser.new_context(storage_state=str(storage_state))
+        context = browser.new_context(storage_state=str(storage_state), user_agent=user_agent)
         page = context.new_page()
         page.goto(
             "https://www.instahyre.com/candidate/opportunities/"
@@ -195,10 +225,7 @@ def run_instahyre_applications(
                 "Instahyre session is not authenticated; refresh INSTAHYRE_STORAGE_STATE_JSON"
             )
 
-        search = page.get_by_role("textbox", name="Enter skills or title, e.g Java, C++")
-        search.fill("Python")
-        page.get_by_role("button", name="Search").evaluate("element => element.click()")
-        page.wait_for_timeout(1_500)
+        _search_python_jobs(page)
 
         for page_number in range(1, max_search_pages + 1):
             if page_number > 1:
@@ -213,10 +240,45 @@ def run_instahyre_applications(
                 if job_id in seen or not job.get("locationMatch"):
                     continue
                 seen.add(job_id)
-                response = page.request.get(job["url"])
-                html = response.text()
-                experience = _experience_from_html(html)
-                if "python" not in html.casefold():
+                try:
+                    details = page.request.get(
+                        f"https://www.instahyre.com/api/v1/employer_public_jobs/{job_id}"
+                    ).json()
+                    opportunity_url = details.get("opportunity_url")
+                    if opportunity_url:
+                        job["url"] = f"https://www.instahyre.com{opportunity_url}"
+                    if not job.get("url"):
+                        raise RuntimeError("Job details did not provide a public URL")
+                except Exception as exc:
+                    results.append(
+                        InstahyreResult(
+                            job_id=job_id,
+                            company=job.get("company", ""),
+                            title=job.get("title", ""),
+                            location=job.get("location", ""),
+                            url=job.get("url", ""),
+                            experience=None,
+                            status="failed",
+                            error=str(exc),
+                        )
+                    )
+                    continue
+                if details.get("applied_on"):
+                    continue
+                minimum = details.get("workex_min")
+                maximum = details.get("workex_max")
+                experience = (
+                    f"{minimum}-{maximum}"
+                    if minimum is not None and maximum is not None
+                    else None
+                )
+                searchable = " ".join(
+                    [
+                        str(details.get("description") or ""),
+                        " ".join(details.get("keywords") or []),
+                    ]
+                )
+                if "python" not in searchable.casefold():
                     continue
                 if not experience_includes(experience, candidate_years):
                     continue
@@ -250,10 +312,7 @@ def run_instahyre_applications(
                 wait_until="domcontentloaded",
                 timeout=30_000,
             )
-            search = page.get_by_role("textbox", name="Enter skills or title, e.g Java, C++")
-            search.fill("Python")
-            page.get_by_role("button", name="Search").evaluate("element => element.click()")
-            page.wait_for_timeout(1_500)
+            _search_python_jobs(page)
 
         browser.close()
 
@@ -280,6 +339,7 @@ def main() -> None:
     parser.add_argument("--candidate-years", type=int, default=6)
     parser.add_argument("--max-search-pages", type=int, default=20)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--user-agent", default=INSTAHYRE_USER_AGENT)
     parser.add_argument("--capture-session", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.limit <= 100:
@@ -294,6 +354,7 @@ def main() -> None:
         candidate_years=args.candidate_years,
         max_search_pages=args.max_search_pages,
         dry_run=args.dry_run,
+        user_agent=args.user_agent,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
 
